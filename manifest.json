@@ -1,0 +1,51 @@
+{
+  "name": "Checkstep Data Collector",
+  "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAlJ9Xu7ghEeaZ0RyBT6HH70yLWEaJ1GpQWvOHceKo/VANgsklXlIw/DmK5Hggittz+oO3R1OKyAbf0mXCPJhKKZnVn9gmCECzBA1RS4fZd0vjAz4bl1zTDEGzersgpOYMCp73eofDjnZ6/SfzkhQWjfnpkSr4oEK15jpN0QQb4iqae1VF5zynjLJZCgS7YCVGpymfSv5h2C7BTYa1rJNIscnXTHFN2Hwej/JNpk/uCciWEAKvK1QFsixOwMMLCvbvIdA2zhS/HxJVAKPHDKkbM6XsElQoAPqZT9Tsu+1xBhn1Ackc5S/fk1WM06zohRYSGKNQuR47Pr7RhqVr+JZA7wIDAQAB",
+  "description": "Data collection for text samples.",
+  "version": "0.0.1.0",
+  "author": "Kyle",
+  "manifest_version": 3,
+
+  "permissions": [
+    "contextMenus",
+    "identity",
+    "storage"
+  ],
+
+  "oauth2": {
+    "client_id": "1060886818249-02bqlculdlm8ksqdp3j2niur4q9lj1ks.apps.googleusercontent.com",
+    "scopes": [
+        "https://www.googleapis.com/auth/spreadsheets"
+    ]
+  },
+
+  "icons": {
+    "16": "/images/checkstep_logo16.png",
+    "32": "/images/checkstep_logo32.png",
+    "48": "/images/checkstep_logo48.png",
+    "128": "/images/checkstep_logo128.png"
+  },
+
+  "background": {
+    "service_worker": "background.js"
+  },
+
+  "content_scripts": [
+    {
+        "matches": ["https://*/*"],
+        "js": ["ui-messaging.js"],
+        "css": ["ui-messaging.css"]
+    }
+  ],
+
+  "action": {
+    "default_popup": "options.html",
+    "default_icon": {
+      "16": "/images/checkstep_logo16.png",
+      "32": "/images/checkstep_logo32.png",
+      "48": "/images/checkstep_logo48.png",
+      "128": "/images/checkstep_logo128.png"
+    }
+  }
+
+}

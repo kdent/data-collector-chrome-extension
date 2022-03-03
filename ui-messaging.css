@@ -1,0 +1,66 @@
+
+/* Style and position the message box. */
+#popup {
+    visibility: hidden;
+    min-width: 250px;
+    margin-left: -125px;
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    border-radius: 10px;     /* Rounded corners */
+    padding: 16px;
+    position: fixed;
+    z-index: 1;
+    left: 50%;              /* Centers the message */
+    bottom: 30px;           /* 30px from the bottom */
+}
+
+/* Show the message by adding this class. */
+#popup.show {
+    visibility: visible;
+
+    /* Animation. 0.5 seconds to fade in and out. Delay fade out */
+    -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
+    animation: fadein 0.5s, fadeout 0.5s 2.5s;
+}
+
+/* Animations to fade the snackbar in and out */
+@-webkit-keyframes fadein {
+  from {bottom: 0; opacity: 0;}
+  to {bottom: 30px; opacity: 1;}
+}
+
+@keyframes fadein {
+  from {bottom: 0; opacity: 0;}
+  to {bottom: 30px; opacity: 1;}
+}
+
+@-webkit-keyframes fadeout {
+  from {bottom: 30px; opacity: 1;}
+  to {bottom: 0; opacity: 0;}
+}
+
+@keyframes fadeout {
+  from {bottom: 30px; opacity: 1;}
+  to {bottom: 0; opacity: 0;}
+}
+
+#alert {
+    visibility: visible;
+    min-width: 250px;
+    background-color: #f44336;
+    color: #fff;
+    text-align: center;
+    border-radius: 10px;     /* Rounded corners */
+    padding: 16px;
+    z-index: 1;
+    position: fixed;
+    top: 30%;
+    left: 50%;
+    margin-right: -50%;
+    transform: translate(-50%, -50%)
+}
+
+.alert-button {
+    margin-top: 15px;
+}
