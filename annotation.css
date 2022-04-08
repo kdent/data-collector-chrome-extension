@@ -1,0 +1,40 @@
+#annotation-popup {
+    visibility: hidden;
+    min-width: 250px;
+    background-color: #efefef;
+    color: #000;
+    border-radius: 10px;     /* Rounded corners */
+    padding: 16px;
+    position: fixed;
+    z-index: 1;
+    left: 25%;
+    bottom: 200px;
+}
+
+#annotation-popup.show {
+    visibility: visible;
+}
+
+.annotate-form {
+  margin-left: 10px;
+  font-family: sans-serif;
+  font-size: 10pt;
+}
+
+.field-row {
+  overflow: hidden;
+  padding-bottom: 10px;
+}
+
+.field-row .label-container {
+  width: 25%;
+  float: left;
+}
+
+.field-row .field-container {
+  width: 75%;
+  float: left;
+}
+
+.sub-category {
+}
