@@ -3,7 +3,7 @@
  */
 
 
-function displayNotification(msg) {
+function displayNotification(msg, sendResponse) {
     /* Create the element to display the message. */
     div = document.createElement("div");
     div.id = "popup";
@@ -21,9 +21,13 @@ function displayNotification(msg) {
         div.remove();
     }, 3000);
 
+    sendResponse(true);
+
+    return true;
+
 }
 
-function displayAlert(msg) {
+function displayAlert(msg, sendResponse) {
     errorDiv = document.createElement("div");
     errorDiv.id = "alert";
     textDiv = document.createElement("div");
@@ -38,12 +42,16 @@ function displayAlert(msg) {
 
     document.body.appendChild(errorDiv);
     textDiv.textContent = msg;
+    sendResponse(true);
+
+    return true;
 }
 
 function clearAlert() {
     errorDiv = document.getElementById("alert");
     errorDiv.className.replace("show", "");
     errorDiv.remove();
+    return true;
 }
 
 
@@ -52,11 +60,12 @@ function clearAlert() {
  */
 chrome.runtime.onMessage.addListener( function(request, sender, sendResponse) {
 
-    console.log("message: " + request.messageText);
     if (request.messageType === "notification") {
-        displayNotification(request.messageText);
+        displayNotification(request.messageText, sendResponse);
     } else if (request.messageType === "alert") {
-        displayAlert(request.messageText);
+        displayAlert(request.messageText, sendResponse);
+    } else {
+        sendResponse(false);
     }
 
 });

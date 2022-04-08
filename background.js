@@ -2,6 +2,15 @@
  * Checkstep Data Collector
  */
 
+chrome.runtime.onInstalled.addListener(function() {
+    /* Add self to context menu. */
+    chrome.contextMenus.create({
+      "title": "Collect text example",
+      "id": "checkstep-text-grabber-menu",
+      "contexts": ["selection"],
+    });
+    chrome.contextMenus.onClicked.addListener(selectionHandler);
+});
 
 /*
  * Data objects.
@@ -81,7 +90,7 @@ let spreadsheet = {
         fetch(url, init)
           .then((response) => response.json())
           .then(function(respData) {
-            console.log(respData)
+            console.log(respData);
             if (respData.error) {
                 let msg = {
                     messageType: "alert",
@@ -125,20 +134,11 @@ chrome.runtime.onMessage.addListener(
 /* As we are loaded, get values for target spreadsheet. */
 loadValuesFromLocalStore();
 
-/* Add self to context menu. */
-chrome.contextMenus.create({
-        "title": "Collect text example",
-        "id": "checkstep-text-grabber-menu",
-        "contexts": ["selection"],
-});
-
 chrome.identity.getAuthToken({ 'interactive': true }, function (token) {
     console.log("got token: " + token);
     spreadsheet.token = token;
 });
 
-
-chrome.contextMenus.onClicked.addListener(selectionHandler);
 
 function loadValuesFromLocalStore() {
     chrome.storage.local.get("spreadsheetId", ({ spreadsheetId }) => {
@@ -162,6 +162,17 @@ function selectionHandler(clickData, tab) {
     curExample.dateCollected = new Date(Date.now()).toUTCString();
     curExample.hate = true;
 
-    spreadsheet.writeRow(curExample, tab);
+    let msg = {
+        messageType: "annotate",
+        messageText: "checking to see if this gets broadcast."
+    };
+
+    chrome.tabs.sendMessage(tab.id, msg, function(response) { 
+//        spreadsheet.writeRow(curExample, tab);
+        if ( response === true ) {
+            console.log("now imma write thate dude");
+        }
+    });
+
 }
 
