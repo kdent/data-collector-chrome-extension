@@ -53,7 +53,7 @@ let html = `
 <div class="field-row">
   <div class="label-container"><label>Comment:</label></div>
   <div class="field-container">
-    <textarea id="comments" rows="4" cols="40"></textarea>
+    <textarea id="comments" rows="4" cols="60"></textarea>
   </div>
 </div>
 

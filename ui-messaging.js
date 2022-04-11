@@ -1,9 +1,11 @@
 /*
  * UI messaging functions.
  */
+"use strict";
 
 
 function displayNotification(msg, sendResponse) {
+    var div, text_span;
     /* Create the element to display the message. */
     div = document.createElement("div");
     div.id = "popup";
@@ -28,6 +30,8 @@ function displayNotification(msg, sendResponse) {
 }
 
 function displayAlert(msg, sendResponse) {
+    var errorDiv, textDiv, okayButton;
+
     errorDiv = document.createElement("div");
     errorDiv.id = "alert";
     textDiv = document.createElement("div");
@@ -48,6 +52,7 @@ function displayAlert(msg, sendResponse) {
 }
 
 function clearAlert() {
+    var errorDiv;
     errorDiv = document.getElementById("alert");
     errorDiv.className.replace("show", "");
     errorDiv.remove();

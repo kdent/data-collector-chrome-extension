@@ -1,6 +1,7 @@
 /*
  * Checkstep Data Collector
  */
+"use strict";
 
 chrome.runtime.onInstalled.addListener(function() {
     /* Add self to context menu. */
@@ -9,7 +10,7 @@ chrome.runtime.onInstalled.addListener(function() {
       "id": "checkstep-text-grabber-menu",
       "contexts": ["selection"],
     });
-    chrome.contextMenus.onClicked.addListener(selectionHandler);
+    chrome.contextMenus.onClicked.addListener(annotateRequestHandler);
 });
 
 /*
@@ -117,12 +118,12 @@ let spreadsheet = {
 }
 
 /*
- * The options script will send a message when options are changed.
+ * The options script will send a message when config options are changed.
  */
 chrome.runtime.onMessage.addListener(
   function(request, sender, sendResponse) {
     console.log("got pinged to update options.");
-    loadValuesFromLocalStore();
+    loadConfigFromLocalStore();
   }
 );
 
@@ -132,7 +133,7 @@ chrome.runtime.onMessage.addListener(
  */
 
 /* As we are loaded, get values for target spreadsheet. */
-loadValuesFromLocalStore();
+loadConfigFromLocalStore();
 
 chrome.identity.getAuthToken({ 'interactive': true }, function (token) {
     console.log("got token: " + token);
@@ -140,7 +141,7 @@ chrome.identity.getAuthToken({ 'interactive': true }, function (token) {
 });
 
 
-function loadValuesFromLocalStore() {
+function loadConfigFromLocalStore() {
     chrome.storage.local.get("spreadsheetId", ({ spreadsheetId }) => {
         console.log("current spreadsheet id val: " + spreadsheetId);
         spreadsheet.id = spreadsheetId;
@@ -154,9 +155,13 @@ function loadValuesFromLocalStore() {
     });
 }
 
-function selectionHandler(clickData, tab) {
+/*
+ * Handler for when a user has selected the menu item to collect a data
+ * example and annotate it.
+ */
+function annotateRequestHandler(clickData, tab) {
 
-    curExample = new DataSample();
+    var curExample = new DataSample();
     curExample.content = clickData.selectionText;
     curExample.originalSource = tab.url;
     curExample.dateCollected = new Date(Date.now()).toUTCString();
