@@ -11,10 +11,6 @@
     bottom: 200px;
 }
 
-#annotation-popup.show {
-    visibility: visible;
-}
-
 .annotate-form {
   margin-left: 10px;
   font-family: sans-serif;

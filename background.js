@@ -3,6 +3,10 @@
  */
 "use strict";
 
+/*
+ * At installation, add an item to the context menu. This item will be for
+ * users to initiate saving a new data example.
+ */
 chrome.runtime.onInstalled.addListener(function() {
     /* Add self to context menu. */
     chrome.contextMenus.create({
@@ -10,8 +14,32 @@ chrome.runtime.onInstalled.addListener(function() {
       "id": "checkstep-text-grabber-menu",
       "contexts": ["selection"],
     });
-    chrome.contextMenus.onClicked.addListener(annotateRequestHandler);
 });
+
+chrome.contextMenus.onClicked.addListener(annotateRequestHandler);
+
+
+/*
+ * Get token needed for access to Google docs.
+ */
+chrome.identity.getAuthToken({ 'interactive': true }, function (token) {
+    console.log("got token: " + token);
+    spreadsheet.token = token;
+});
+
+/* As we are loaded, get configuration information. */
+loadConfigFromLocalStore();
+
+/*
+ * The options script will send a message when config options are changed.
+ */
+chrome.runtime.onMessage.addListener(
+  function(request, sender, sendResponse) {
+    console.log("got pinged to update options.");
+    loadConfigFromLocalStore();
+  }
+);
+
 
 /*
  * Data objects.
@@ -48,6 +76,7 @@ let spreadsheet = {
     token: "",
 
     writeRow: function(data, tab) {
+        var range;
 
         if ( ! spreadsheet.id) {
             let msg = {
@@ -117,30 +146,6 @@ let spreadsheet = {
     }
 }
 
-/*
- * The options script will send a message when config options are changed.
- */
-chrome.runtime.onMessage.addListener(
-  function(request, sender, sendResponse) {
-    console.log("got pinged to update options.");
-    loadConfigFromLocalStore();
-  }
-);
-
-
-/*
- * Script starts here.
- */
-
-/* As we are loaded, get values for target spreadsheet. */
-loadConfigFromLocalStore();
-
-chrome.identity.getAuthToken({ 'interactive': true }, function (token) {
-    console.log("got token: " + token);
-    spreadsheet.token = token;
-});
-
-
 function loadConfigFromLocalStore() {
     chrome.storage.local.get("spreadsheetId", ({ spreadsheetId }) => {
         console.log("current spreadsheet id val: " + spreadsheetId);
@@ -167,17 +172,15 @@ function annotateRequestHandler(clickData, tab) {
     curExample.dateCollected = new Date(Date.now()).toUTCString();
     curExample.hate = true;
 
-    let msg = {
-        messageType: "annotate",
-        messageText: "checking to see if this gets broadcast."
-    };
-
-    chrome.tabs.sendMessage(tab.id, msg, function(response) { 
+    chrome.tabs.sendMessage(tab.id,
+        {messageType: "show-annotation-screen", messageText: ""},
+        function(response) { 
 //        spreadsheet.writeRow(curExample, tab);
-        if ( response === true ) {
-            console.log("now imma write thate dude");
+            if ( response === true ) {
+                console.log("now imma write thate dude");
+            }
         }
-    });
+    );
 
 }
 
