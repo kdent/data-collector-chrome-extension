@@ -21,6 +21,19 @@ function displayAnnotateScreen(sendResponse) {
         annotation_div = document.createElement("div");
         annotation_div.id = POPUP_ID;
         annotation_div.innerHTML = annotation_screen_html;
+
+        document.addEventListener("keyup", function(evt) {
+
+            if (annotation_div.style.visibility !== "visible") {
+                return;
+            }
+
+            if (evt.key === "Escape") {
+                cancelAnnotation(evt);
+            } else if (evt.key === "Enter") {
+                saveAnnotation(evt);
+            }
+        });
     }
     annotation_div.style.visibility = "visible";
 
@@ -29,10 +42,11 @@ function displayAnnotateScreen(sendResponse) {
     cancel_button = document.getElementById('button-cancel');
     save_button.addEventListener("click", saveAnnotation);
     cancel_button.addEventListener("click", cancelAnnotation);
+
 }
 
 function saveAnnotation(evt) {
-    displayAlert("hiya", () => {});
+    displayAlert("Record will be saved when implemented", () => {});
 }
 
 function cancelAnnotation(evt) {
