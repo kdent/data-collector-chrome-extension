@@ -4,7 +4,7 @@
 "use strict";
 
 
-function displayNotification(msg, sendResponse) {
+function displayNotification(msg) {
     var div, text_span;
     /* Create the element to display the message. */
     div = document.createElement("div");
@@ -23,13 +23,11 @@ function displayNotification(msg, sendResponse) {
         div.remove();
     }, 3000);
 
-    sendResponse(true);
-
     return true;
 
 }
 
-function displayAlert(msg, sendResponse) {
+function displayAlert(msg) {
     var errorDiv, textDiv, okayButton;
 
     errorDiv = document.createElement("div");
@@ -46,7 +44,6 @@ function displayAlert(msg, sendResponse) {
 
     document.body.appendChild(errorDiv);
     textDiv.textContent = msg;
-    sendResponse(true);
 
     return true;
 }
@@ -67,8 +64,10 @@ chrome.runtime.onMessage.addListener( function(request, sender, sendResponse) {
 
     if (request.messageType === "notification") {
         displayNotification(request.messageText, sendResponse);
+        sendReponse(true);
     } else if (request.messageType === "alert") {
         displayAlert(request.messageText, sendResponse);
+        sendResponse(true);
     } else {
         sendResponse(false);
     }

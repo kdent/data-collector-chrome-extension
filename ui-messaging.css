@@ -10,7 +10,7 @@
     border-radius: 10px;     /* Rounded corners */
     padding: 16px;
     position: fixed;
-    z-index: 1;
+    z-index: 120;
     left: 50%;              /* Centers the message */
     bottom: 30px;           /* 30px from the bottom */
 }
@@ -53,7 +53,7 @@
     text-align: center;
     border-radius: 10px;     /* Rounded corners */
     padding: 16px;
-    z-index: 1;
+    z-index: 120;
     position: fixed;
     top: 30%;
     left: 50%;

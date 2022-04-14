@@ -16,37 +16,65 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 function displayAnnotateScreen(sendResponse) {
     var annotation_div, save_button, cancel_button;
 
+    /*
+     * Set up the annotation popup window if it hasn't been invoked
+     * already.
+     */
     annotation_div = document.getElementById(POPUP_ID);
     if (! annotation_div ) {
         annotation_div = document.createElement("div");
         annotation_div.id = POPUP_ID;
         annotation_div.innerHTML = annotation_screen_html;
+        document.body.appendChild(annotation_div);
 
         document.addEventListener("keyup", function(evt) {
-
-            if (annotation_div.style.visibility !== "visible") {
-                return;
-            }
-
-            if (evt.key === "Escape") {
-                cancelAnnotation(evt);
-            } else if (evt.key === "Enter") {
-                saveAnnotation(evt);
-            }
+            keyPressHandler(evt, annotation_div);
         });
+
+        document.addEventListener("click", function(evt) {
+            mouseClickHandler(evt, annotation_div);
+        });
+
+        save_button = document.getElementById('checkstep-button-save');
+        cancel_button = document.getElementById('checkstep-button-cancel');
+        save_button.addEventListener("click", saveAnnotation);
+        cancel_button.addEventListener("click", cancelAnnotation);
     }
+
+    console.log("displaying annotation screen");
     annotation_div.style.visibility = "visible";
 
-    document.body.appendChild(annotation_div);
-    save_button = document.getElementById('button-save');
-    cancel_button = document.getElementById('button-cancel');
-    save_button.addEventListener("click", saveAnnotation);
-    cancel_button.addEventListener("click", cancelAnnotation);
 
+}
+
+function keyPressHandler(evt, popupScreen) {
+    if (popupScreen.style.visibility !== "visible") {
+        return;
+    }
+
+    if (evt.key === "Escape") {
+        cancelAnnotation(evt);
+    } else if (evt.key === "Enter") {
+        saveAnnotation(evt);
+    }
+}
+
+function mouseClickHandler(evt, popupScreen) {
+    var isClickInWindow;
+
+    if (popupScreen.style.visibility !== "visible") {
+        return;
+    }
+
+    isClickInWindow = popupScreen.contains(evt.target);
+    if (! isClickInWindow) {
+        cancelAnnotation(evt);
+    }
 }
 
 function saveAnnotation(evt) {
     displayAlert("Record will be saved when implemented", () => {});
+    console.log("saving data example");
 }
 
 function cancelAnnotation(evt) {
@@ -54,7 +82,7 @@ function cancelAnnotation(evt) {
 
     annotation_div = document.getElementById(POPUP_ID);
     annotation_div.style.visibility = "hidden";
-//    annotation_div.style.display = "none";
+    console.log("canceling annotation");
 }
 
 let annotation_screen_html = `
@@ -111,15 +139,15 @@ let annotation_screen_html = `
 <div class="field-row">
   <div class="label-container"><label>Comment:</label></div>
   <div class="field-container">
-    <textarea id="comments" rows="4" cols="60"></textarea>
+    <textarea class="checkstep-textarea" id="checkstep-comments" rows="4" cols="60"></textarea>
   </div>
 </div>
 
 <div class="field-row">
   <div class="label-container">&nbsp;</div>
   <div class="field-container">
-    <button type="button" id="button-save">Save</button>
-    <button type="button" id="button-cancel">Cancel</button>
+    <button class="checkstep-button" type="button" id="checkstep-button-save">Save</button>
+    <button class="checkstep-button" type="button" id="checkstep-button-cancel">Cancel</button>
   </div>
 </div>
 
