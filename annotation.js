@@ -1,10 +1,13 @@
 "use strict";
 
 const POPUP_ID = "annotation-popup";
+const LABEL_CONFIG_PATH = 'config/labels.json';
+let annotationsOptions;
 
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 
     if (request.messageType === "show-annotation-screen") {
+        console.log("show annotation screen request received");
         displayAnnotateScreen(sendResponse);
         sendResponse(true);
     } else {
@@ -14,37 +17,76 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 });
 
 function displayAnnotateScreen(sendResponse) {
-    var annotation_div, save_button, cancel_button;
+    var annotationDiv, save_button, cancel_button;
 
     /*
      * Set up the annotation popup window if it hasn't been invoked
      * already.
      */
-    annotation_div = document.getElementById(POPUP_ID);
-    if (! annotation_div ) {
-        annotation_div = document.createElement("div");
-        annotation_div.id = POPUP_ID;
-        annotation_div.innerHTML = annotation_screen_html;
-        document.body.appendChild(annotation_div);
-
-        document.addEventListener("keyup", function(evt) {
-            keyPressHandler(evt, annotation_div);
-        });
-
-        document.addEventListener("click", function(evt) {
-            mouseClickHandler(evt, annotation_div);
-        });
-
-        save_button = document.getElementById('checkstep-button-save');
-        cancel_button = document.getElementById('checkstep-button-cancel');
-        save_button.addEventListener("click", saveAnnotation);
-        cancel_button.addEventListener("click", cancelAnnotation);
+    annotationDiv = document.getElementById(POPUP_ID);
+    if (! annotationDiv ) {
+        annotationDiv = initializeAnnotationScreen();
     }
 
     console.log("displaying annotation screen");
-    annotation_div.style.visibility = "visible";
+    annotationDiv.style.visibility = "visible";
 
+}
 
+function initializeAnnotationScreen() {
+    var annotationDiv;
+
+    /* Set up screen */
+    annotationDiv = document.createElement("div");
+    annotationDiv.id = POPUP_ID;
+    annotationDiv.innerHTML = annotation_screen_html;
+    document.body.appendChild(annotationDiv);
+
+    document.addEventListener("keyup", function(evt) {
+        keyPressHandler(evt, annotationDiv);
+    });
+
+    document.addEventListener("click", function(evt) {
+        mouseClickHandler(evt, annotationDiv);
+    });
+
+    document.getElementById('checkstep-button-save').addEventListener("click", saveAnnotation);
+    document.getElementById('checkstep-button-cancel').addEventListener("click", cancelAnnotation);
+
+    /* Read annotation label info. */
+    chrome.storage.sync.get('labels', (options) => {
+        console.log(options.labels);
+        annotationsOptions = JSON.parse(options.labels);
+        writeHTMLForCategories(annotationsOptions);
+    });
+
+    return annotationDiv;
+}
+
+function writeHTMLForCategories(annotationOptions) {
+    var categorySelectHTML, subCategoryHTML;
+
+    categorySelectHTML = "<option></option>";
+    subCategoryHTML = "<ul>";
+    annotationsOptions.forEach((obj) => {
+
+        categorySelectHTML += '<option>' + obj['category'] + '</option>';
+
+        if (obj['category'] === "Hate") {
+            obj['sub-categories'].forEach((subcat) => {
+                let elementId = subcat.toLowerCase().replace(" ", "-");
+                subCategoryHTML += '<div class="sub-category">';
+                subCategoryHTML += '<input type="checkbox" id="' + elementId + '">';
+                subCategoryHTML += '<label for="' + elementId + '">';
+                subCategoryHTML += ' ' + subcat + '</label>';
+                subCategoryHTML += '</div>';
+            });
+        }
+    });
+    subCategoryHTML += "</ul>";
+
+    document.getElementById('category-select').innerHTML = categorySelectHTML;
+    document.getElementById('subcategory-list').innerHTML = subCategoryHTML;
 }
 
 function keyPressHandler(evt, popupScreen) {
@@ -78,10 +120,10 @@ function saveAnnotation(evt) {
 }
 
 function cancelAnnotation(evt) {
-    var annotation_div;
+    var annotationDiv;
 
-    annotation_div = document.getElementById(POPUP_ID);
-    annotation_div.style.visibility = "hidden";
+    annotationDiv = document.getElementById(POPUP_ID);
+    annotationDiv.style.visibility = "hidden";
     console.log("canceling annotation");
 }
 
@@ -91,7 +133,7 @@ let annotation_screen_html = `
 <div class="field-row">
   <div class="label-container"><label>Category:</label></div>
   <div class="field-container">
-    <select>
+    <select id="category-select">
         <option></option>
         <option>Hate</option>
         <option>Adult/explicit</option>
@@ -106,32 +148,8 @@ let annotation_screen_html = `
   <div class="label-container"><label>Sub-category:</label></div>
   <div class="field-container">
 
-
-    <div class="sub-category">
-      <input type="checkbox" id="violent-speech">
-      <label for="violent-speech">Violent speech</label>
-    </div>
-
-    <div class="sub-category">
-      <input type="checkbox" id="dehumanizing-comparisons">
-      <label for="dehumanizing-comparisons">Dehumanizing comparisons</label>
-    </div>
-
-    <div class="sub-category">
-      <input type="checkbox" id="negative-generalization">
-      <label for="negative-generalization">Negative generalization</label>
-    </div>
-
-    <div class="sub-category">
-      <input type="checkbox" id="exclude-segregate-curse">
-      <label for="exclude-segregate-curse">Exclude, segregate, curse</label>
-    </div>
-
-    <div class="sub-category">
-      <input type="checkbox" id="slur">
-      <label for="slur">Slur</label>
-    </div>
-
+  <div id="subcategory-list">
+  </div>
 
   </div>
 </div>

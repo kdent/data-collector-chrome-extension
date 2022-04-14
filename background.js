@@ -3,25 +3,48 @@
  */
 "use strict";
 
+const LABEL_CONFIG_PATH = 'config/labels.json';
+
 /*
- * At installation, add an item to the context menu. This item will be for
- * users to initiate saving a new data example.
+ * Events and actions at installation.
  */
-chrome.runtime.onInstalled.addListener(function() {
+chrome.runtime.onInstalled.addListener(handleOnInstalled);
+
+/*
+ * Handler for onInstalled event.
+ */
+function handleOnInstalled() {
+    var labelConfigUrl;
+
     /* Add self to context menu. */
     chrome.contextMenus.create({
       "title": "Collect text example",
       "id": "checkstep-text-grabber-menu",
       "contexts": ["selection"],
     });
-});
+    chrome.contextMenus.onClicked.addListener(annotateRequestHandler);
 
-chrome.contextMenus.onClicked.addListener(annotateRequestHandler);
+    /* Read initial label configuration from JSON file and store it. */
+    labelConfigUrl = chrome.runtime.getURL(LABEL_CONFIG_PATH);
+    fetch(labelConfigUrl)
+        .then((response) => response.json())
+        .then((json) => storeLabelConfig(json));
+}
+
+function storeLabelConfig(labelConfigJson) {
+    var str = JSON.stringify(labelConfigJson);
+    chrome.storage.sync.set({'labels': JSON.stringify(labelConfigJson)},
+      function() {
+        console.log("storing annotations label information: " + JSON.stringify(labelConfigJson));
+      }
+    );
+}
 
 
 /*
- * Get token needed for access to Google docs.
+ * Events and actions at startup time.
  */
+// Get token needed for access to Google docs.
 chrome.identity.getAuthToken({ 'interactive': true }, function (token) {
     console.log("got token: " + token);
     spreadsheet.token = token;
@@ -35,7 +58,7 @@ loadConfigFromLocalStore();
  */
 chrome.runtime.onMessage.addListener(
   function(request, sender, sendResponse) {
-    console.log("got pinged to update options.");
+    console.log("request to update options received");
     loadConfigFromLocalStore();
   }
 );
@@ -165,8 +188,10 @@ function loadConfigFromLocalStore() {
  * example and annotate it.
  */
 function annotateRequestHandler(clickData, tab) {
+    var curExample;
 
-    var curExample = new DataSample();
+    console.log("received request to annotate data example");
+    curExample = new DataSample();
     curExample.content = clickData.selectionText;
     curExample.originalSource = tab.url;
     curExample.dateCollected = new Date(Date.now()).toUTCString();
@@ -176,6 +201,7 @@ function annotateRequestHandler(clickData, tab) {
         {messageType: "show-annotation-screen", messageText: ""},
         function(response) { 
 //        spreadsheet.writeRow(curExample, tab);
+            console.log("sending annotate request to content script");
             if ( response === true ) {
                 console.log("now imma write thate dude");
             }

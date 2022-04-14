@@ -1,0 +1,18 @@
+[
+{
+    "category": "Hate",
+    "spreadsheet-id": "",
+    "sheet-name": "",
+    "sub-categories": ["Dehumanizing comparisons", "Violent Speech", "Negative Generalization", "Exclude, segregate", "Slurs"],
+    "secondary-labels": ["Bullying"]
+},
+{
+    "category": "CSAM",
+    "spreadsheet-id": "",
+    "sheet-name": "",
+    "sub-categories": [],
+    "secondary-labels": []
+}
+
+
+]
