@@ -4,6 +4,7 @@
 "use strict";
 
 const LABEL_CONFIG_PATH = 'config/labels.json';
+const ANNOTATION_HTML_PATH = "annotation.html";
 
 /*
  * Events and actions at installation.
@@ -14,7 +15,7 @@ chrome.runtime.onInstalled.addListener(handleOnInstalled);
  * Handler for onInstalled event.
  */
 function handleOnInstalled() {
-    var labelConfigUrl;
+    var labelConfigUrl, annotationHTMLUrl;
 
     /* Add self to context menu. */
     chrome.contextMenus.create({
@@ -29,6 +30,11 @@ function handleOnInstalled() {
     fetch(labelConfigUrl)
         .then((response) => response.json())
         .then((json) => storeLabelConfig(json));
+
+    /* Get the HTML for display annotation screen. Store it for content scripts to use. */
+    annotationHTMLUrl = chrome.runtime.getURL(ANNOTATION_HTML_PATH);
+    fetch(annotationHTMLUrl)
+        .then((response) => storeAnnotationHTML(response));
 }
 
 function storeLabelConfig(labelConfigJson) {
@@ -36,6 +42,15 @@ function storeLabelConfig(labelConfigJson) {
     chrome.storage.sync.set({'labels': JSON.stringify(labelConfigJson)},
       function() {
         console.log("storing annotations label information: " + JSON.stringify(labelConfigJson));
+      }
+    );
+}
+
+function storeAnnotationHTML(htmlContents) {
+    chrome.storage.sync.set({'html': htmlContents},
+      function() {
+        console.log("storing HTML for annotations screen");
+        console.log(htmlContents);
       }
     );
 }
