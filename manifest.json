@@ -40,7 +40,7 @@
 
   "web_accessible_resources": [
     {
-      "resources": ["config/labels.json"],
+      "resources": ["config/labels.json", "annotation.html"],
       "matches": ["https://*/*"]
     }
   ],
