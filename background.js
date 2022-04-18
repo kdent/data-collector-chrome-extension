@@ -23,7 +23,6 @@ function handleOnInstalled() {
       "id": "checkstep-text-grabber-menu",
       "contexts": ["selection"],
     });
-    chrome.contextMenus.onClicked.addListener(annotateRequestHandler);
 
     /* Read initial label configuration from JSON file and store it. */
     labelConfigUrl = chrome.runtime.getURL(LABEL_CONFIG_PATH);
@@ -59,6 +58,10 @@ function storeAnnotationHTML(htmlContents) {
 /*
  * Events and actions at startup time.
  */
+
+// Add handler for when extension is invoked from the context menu.
+chrome.contextMenus.onClicked.addListener(annotateRequestHandler);
+
 // Get token needed for access to Google docs.
 chrome.identity.getAuthToken({ 'interactive': true }, function (token) {
     console.log("got token: " + token);
