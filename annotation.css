@@ -2,6 +2,7 @@
     visibility: hidden;
 /*    min-width: 250px; */
     width: auto;
+    height: auto;
     background-color: #efefef;
     color: #000;
     border-radius: 10px;     /* Rounded corners */
@@ -13,7 +14,6 @@
     position: fixed;
     bottom: 200px;
     left: 25%;
-    height: 50%;
     z-index: 100;
     overflow-y: auto;
 }
@@ -53,14 +53,10 @@
 
 #annotation-popup .checkstep-textarea {
   width: 90%;
-  height: 100px;
-  padding: 12px 20px;
+  margin: 15px;
   border: 2px solid #ccc;
   border-radius: 4px;
   color: black;
   background-color: #f8f8f8;
-  resize: none;
 }
 
-.sub-category {
-}

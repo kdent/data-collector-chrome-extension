@@ -115,6 +115,8 @@ function drawCategories(annotationsOptions) {
 }
 
 function keyPressHandler(evt, popupScreen) {
+    var comments;
+
     if (popupScreen.style.visibility !== "visible") {
         return;
     }
@@ -122,6 +124,10 @@ function keyPressHandler(evt, popupScreen) {
     if (evt.key === "Escape") {
         cancelAnnotation(evt);
     } else if (evt.key === "Enter") {
+        comments = document.getElementById("checkstep-comments");
+        if (comments.contains(evt.target)) {
+            return;
+        }
         saveAnnotation(evt);
     }
 }
@@ -155,9 +161,15 @@ function drawSubcategoryCheckboxes(currentCategory) {
 }
 
 function mouseClickHandler(evt, popupScreen) {
-    var isClickInWindow;
+    var comments, isClickInWindow;
 
     if (popupScreen.style.visibility !== "visible") {
+        return;
+    }
+
+    /* If in the comments textarea let the mouse click pass through. */
+    comments = document.getElementById("checkstep-comments");
+    if (comments.contains(evt.target)) {
         return;
     }
 
