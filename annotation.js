@@ -34,6 +34,9 @@ function displayAnnotateScreen(sendResponse) {
         chrome.storage.sync.get('labels', (options) => {
             console.log(options.labels);
             annotationsOptions = JSON.parse(options.labels);
+            if (! annotationsOptions ) {
+                throw "Annotation config is empty";
+            }
         });
     }
 
@@ -177,43 +180,3 @@ function cancelAnnotation(evt) {
     console.log("canceling annotation");
 }
 
-let annotation_screen_html = `
-<form class="annotate-form">
- 
-<div class="field-row">
-  <div class="label-container"><label>Category:</label></div>
-  <div class="field-container">
-    <select id="category-select">
-        <!-- to be filled in dynamically -->
-    </select>
-  </div>
-</div>  
-
-<div class="field-row">
-  <div class="label-container"><label>Sub-categories:</label></div>
-  <div class="field-container">
-
-  <div id="subcategory-list">
-  </div>
-
-  </div>
-</div>
-
-<div class="field-row">
-  <div class="label-container"><label>Comment:</label></div>
-  <div class="field-container">
-    <textarea class="checkstep-textarea" id="checkstep-comments" rows="4" cols="60"></textarea>
-  </div>
-</div>
-
-<div class="field-row">
-  <div class="label-container">&nbsp;</div>
-  <div class="field-container">
-    <button class="checkstep-button" type="button" id="checkstep-button-save">Save</button>
-    <button class="checkstep-button" type="button" id="checkstep-button-cancel">Cancel</button>
-  </div>
-</div>
-
-
-</form>
-`
