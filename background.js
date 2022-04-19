@@ -216,7 +216,10 @@ function annotateRequestHandler(clickData, tab) {
     curExample.hate = true;
 
     chrome.tabs.sendMessage(tab.id,
-        {messageType: "show-annotation-screen", messageText: ""},
+        {
+         messageType: "show-annotation-screen",
+         selectedText: clickData.selectionText
+        },
         function(response) { 
 //        spreadsheet.writeRow(curExample, tab);
             console.log("sending annotate request to content script");

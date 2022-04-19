@@ -2,6 +2,16 @@
 <meta charset="utf-8">
 <link rel="stylesheet" type="css" href="annotation.css">
 
+<div class="field-row">
+  <div class="label-container">
+    <label>Selected Text:</label>
+  </div>
+
+  <div class="field-container">
+    <div id="checkstep-selected-text"></div>
+  </div>
+</div>
+
 <form class="annotate-form">
 
 <div class="field-row">
@@ -26,6 +36,15 @@
   <div class="label-container"><label>Comment:</label></div>
   <div class="field-container" width="800px">
     <textarea class="checkstep-textarea" id="checkstep-comments" rows="5" cols="60"></textarea>
+  </div>
+</div>
+
+<div class="field-row">
+  <div class="label-container"><label>Secondary Labels:</label></div>
+  <div class="field-container">
+    <!-- filled in dynamically -->
+    <div id="secondary-labels-list">
+    </div>
   </div>
 </div>
 

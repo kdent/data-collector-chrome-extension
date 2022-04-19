@@ -2,7 +2,7 @@
     visibility: hidden;
 /*    min-width: 250px; */
     width: auto;
-    height: auto;
+    height: fit-content;
     background-color: #efefef;
     color: #000;
     border-radius: 10px;     /* Rounded corners */
@@ -11,7 +11,7 @@
     padding-bottom: 16;
     padding-right: 15px;
     padding-left: 15px;
-    position: fixed;
+    position: absolute;
     bottom: 200px;
     left: 25%;
     z-index: 100;
@@ -37,6 +37,11 @@
 .field-row .field-container {
   width: 75%;
   float: left;
+}
+
+#checkstep-selected-text {
+    font-weight: bold;
+    font-style: italic;
 }
 
 #annotation-popup .checkstep-button {

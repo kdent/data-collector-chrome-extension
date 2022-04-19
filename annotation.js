@@ -2,7 +2,7 @@
 
 const POPUP_ID = "annotation-popup";
 const LABEL_CONFIG_PATH = 'config/labels.json';
-let annotationsOptions = undefined;
+let annotationOptions = undefined;
 let currentCategory = undefined;
 let annotationHTML = undefined;
 
@@ -13,7 +13,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 
     if (request.messageType === "show-annotation-screen") {
         console.log("show annotation screen request received");
-        displayAnnotateScreen(sendResponse);
+        displayAnnotateScreen(request.selectedText, sendResponse);
         sendResponse(true);
     } else {
         sendResponse(false);
@@ -24,17 +24,17 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 /*
  * Display the popup box for annotating selected text.
  */
-function displayAnnotateScreen(sendResponse) {
+function displayAnnotateScreen(selectedText, clientX, clientY, sendResponse) {
     var annotationURL, annotationDiv, save_button, cancel_button;
 
     /*
      * Load annotation config if it's not already available.
      */
-    if (! annotationsOptions ) {
+    if (! annotationOptions ) {
         chrome.storage.sync.get('labels', (options) => {
             console.log(options.labels);
-            annotationsOptions = JSON.parse(options.labels);
-            if (! annotationsOptions ) {
+            annotationOptions = JSON.parse(options.labels);
+            if (! annotationOptions ) {
                 throw "Annotation config is empty";
             }
         });
@@ -51,14 +51,19 @@ function displayAnnotateScreen(sendResponse) {
             return response.text();
         }).then(function(html) {
             annotationHTML = html;
-            console.log("displaying annotation screen");
+            console.log("initializing and displaying annotation screen");
             annotationDiv = initializeAnnotationScreen();
-            drawCategories(annotationsOptions);
+            displaySelectedText(selectedText);
+            displayCategories(annotationOptions);
             annotationDiv.style.visibility = "visible";
+            positionAnnotationBox();
         });
     } else {
         console.log("displaying annotation screen");
+        displaySelectedText(selectedText);
+        displayCategories(annotationOptions);
         annotationDiv.style.visibility = "visible";
+        positionAnnotationBox();
     }
 
 }
@@ -87,10 +92,17 @@ function initializeAnnotationScreen() {
     return annotationDiv;
 }
 
-function drawCategories(annotationsOptions) {
+function displaySelectedText(selectedText) {
+    var textElement;
+
+    textElement = document.getElementById("checkstep-selected-text");
+    textElement.innerHTML = selectedText;
+}
+
+function displayCategories(annotationOptions) {
     var categoryList, categorySelectHTML, subCategoryHTML;
 
-    categoryList = Object.keys(annotationsOptions).sort();
+    categoryList = Object.keys(annotationOptions).sort();
 
     /*
      * Top-level category selection.
@@ -108,7 +120,8 @@ function drawCategories(annotationsOptions) {
      * Sub-category checkboxes.
      */
     if (currentCategory) {
-        drawSubcategoryCheckboxes(currentCategory);
+        displaySubcategoryCheckboxes(currentCategory);
+        displaySecondaryLabelCheckboxes(currentCategory);
     }
  
     document.getElementById('category-select').innerHTML = categorySelectHTML;
@@ -137,10 +150,11 @@ function categorySelectionHandler(evt) {
 
     categorySelectList = document.getElementById('category-select');
     currentCategory = categorySelectList.options[categorySelectList.selectedIndex].text;
-    drawSubcategoryCheckboxes(currentCategory);
+    displaySubcategoryCheckboxes(currentCategory);
+    displaySecondaryLabelCheckboxes(currentCategory);
 }
 
-function drawSubcategoryCheckboxes(currentCategory) {
+function displaySubcategoryCheckboxes(currentCategory) {
     var subCategoryHTML;
 
     if (! currentCategory ) {
@@ -148,7 +162,7 @@ function drawSubcategoryCheckboxes(currentCategory) {
     }
 
     subCategoryHTML = "<ul>";
-    annotationsOptions[currentCategory]['sub-categories'].forEach((subcat) => {
+    annotationOptions[currentCategory]['sub-categories'].forEach((subcat) => {
         let elementId = subcat.toLowerCase().replace(" ", "-");
         subCategoryHTML += '<div class="sub-category">';
         subCategoryHTML += '<input type="checkbox" id="' + elementId + '">';
@@ -158,6 +172,45 @@ function drawSubcategoryCheckboxes(currentCategory) {
     });
     subCategoryHTML += "</ul>";
     document.getElementById('subcategory-list').innerHTML = subCategoryHTML;
+}
+
+function displaySecondaryLabelCheckboxes(currentCategory) {
+    var secondaryLabelsHTML, secondaryLabelsList, secondaryLabelsElement;
+
+    if (! currentCategory) {
+        return;
+    }
+
+    secondaryLabelsElement = document.getElementById('secondary-labels-list');
+
+    secondaryLabelsList = annotationOptions[currentCategory]["secondary-labels"];
+    if (! secondaryLabelsList || secondaryLabelsList.length == 0) {
+        secondaryLabelsElement.innerHTML = "";
+        return;
+    }
+
+    secondaryLabelsHTML = "";
+    secondaryLabelsList.forEach((label) => {
+        let labelId = label.toLowerCase().replace(" ", "-");
+        secondaryLabelsHTML += '<input type="checkbox" id="' + labelId + '">';
+        secondaryLabelsHTML += '<label for="' + labelId + '">';
+        secondaryLabelsHTML += ' ' + label + '</label>';
+    });
+    secondaryLabelsElement.innerHTML = secondaryLabelsHTML;
+
+}
+
+function positionAnnotationBox() {
+    var annotationBox, posX, posY;
+
+    annotationBox = document.getElementById(POPUP_ID);
+    posY = Math.round(window.innerHeight/2 - annotationBox.offsetHeight/2);
+    posX = Math.round(window.innerWidth/2 - annotationBox.offsetWidth/2);
+    posY = posY + window.scrollY;
+    posX = posX + window.scrollX;
+    annotationBox.style.left = posX + "px";
+    annotationBox.style.top = posY + "px";
+    
 }
 
 function mouseClickHandler(evt, popupScreen) {
@@ -176,6 +229,7 @@ function mouseClickHandler(evt, popupScreen) {
     isClickInWindow = popupScreen.contains(evt.target);
     if (! isClickInWindow) {
         cancelAnnotation(evt);
+        evt.stopPropagation();  // TODO: this doesn't seem to work as expected
     }
 }
 
