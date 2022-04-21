@@ -28,34 +28,37 @@ function displayNotification(msg) {
 }
 
 function displayAlert(msg) {
-    var errorDiv, textDiv, okayButton;
+    var alertDiv, textDiv, okayButton;
 
-    errorDiv = document.createElement("div");
-    errorDiv.id = "alert";
+    alertDiv = document.createElement("div");
+    alertDiv.id = "alert";
     textDiv = document.createElement("div");
     okayButton = document.createElement("button");
     okayButton.className = "alert-button";
     okayButton.innerHTML = "Ok";
     okayButton.onclick = function () {
-        errorDiv.remove();
+        alertDiv.remove();
     };
-    errorDiv.appendChild(textDiv);
-    errorDiv.appendChild(okayButton);
+    okayButton.focus();
+    alertDiv.appendChild(textDiv);
+    alertDiv.appendChild(okayButton);
 
-    document.body.appendChild(errorDiv);
+    document.addEventListener("keyup", alertMsgKeyPressHandler);
+
+    document.body.appendChild(alertDiv);
     textDiv.textContent = msg;
 
     return true;
 }
 
 function clearAlert() {
-    var errorDiv;
-    errorDiv = document.getElementById("alert");
-    errorDiv.className.replace("show", "");
-    errorDiv.remove();
+    var alertDiv;
+
+    document.removeEventListener("keyup", alertMsgKeyPressHandler);
+    alertDiv = document.getElementById("alert");
+    alertDiv.remove();
     return true;
 }
-
 
 /*
  * Message listener.
@@ -74,3 +77,9 @@ chrome.runtime.onMessage.addListener( function(request, sender, sendResponse) {
 
 });
 
+function alertMsgKeyPressHandler(evt) {
+    if (evt.key === "Enter") {
+        evt.stopImmediatePropagation();
+        clearAlert();
+    }
+}

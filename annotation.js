@@ -47,7 +47,7 @@ function displayAnnotateScreen(selectedText, clientX, clientY, sendResponse) {
     annotationDiv = document.getElementById(POPUP_ID);
     if (! annotationDiv ) {
         annotationURL = chrome.runtime.getURL("annotation.html");
-        fetch(annotationURL).then(function(response) {
+        fetch(annotationURL).then((response) => {
             return response.text();
         }).then(function(html) {
             annotationHTML = html;
@@ -55,6 +55,8 @@ function displayAnnotateScreen(selectedText, clientX, clientY, sendResponse) {
             annotationDiv = initializeAnnotationScreen();
             displaySelectedText(selectedText);
             displayCategories(annotationOptions);
+            document.addEventListener("keyup", keyPressHandler);
+            document.addEventListener("click", mouseClickHandler);
             annotationDiv.style.visibility = "visible";
             positionAnnotationBox();
         });
@@ -62,6 +64,8 @@ function displayAnnotateScreen(selectedText, clientX, clientY, sendResponse) {
         console.log("displaying annotation screen");
         displaySelectedText(selectedText);
         displayCategories(annotationOptions);
+        document.addEventListener("keyup", keyPressHandler);
+        document.addEventListener("click", mouseClickHandler);
         annotationDiv.style.visibility = "visible";
         positionAnnotationBox();
     }
@@ -76,14 +80,6 @@ function initializeAnnotationScreen() {
     annotationDiv.id = POPUP_ID;
     annotationDiv.innerHTML = annotationHTML;
     document.body.appendChild(annotationDiv);
-
-    document.addEventListener("keyup", function(evt) {
-        keyPressHandler(evt, annotationDiv);
-    });
-
-    document.addEventListener("click", function(evt) {
-        mouseClickHandler(evt, annotationDiv);
-    });
 
     document.getElementById('category-select').addEventListener("change", categorySelectionHandler);
     document.getElementById('checkstep-button-save').addEventListener("click", saveAnnotation);
@@ -127,8 +123,10 @@ function displayCategories(annotationOptions) {
     document.getElementById('category-select').innerHTML = categorySelectHTML;
 }
 
-function keyPressHandler(evt, popupScreen) {
-    var comments;
+function keyPressHandler(evt) {
+    var comments, popupScreen;
+
+    popupScreen = document.getElementById(POPUP_ID);
 
     if (popupScreen.style.visibility !== "visible") {
         return;
@@ -213,8 +211,10 @@ function positionAnnotationBox() {
     
 }
 
-function mouseClickHandler(evt, popupScreen) {
-    var comments, isClickInWindow;
+function mouseClickHandler(evt) {
+    var comments, popupScreen, isClickInWindow;
+
+    popupScreen = document.getElementById(POPUP_ID);
 
     if (popupScreen.style.visibility !== "visible") {
         return;
@@ -229,20 +229,28 @@ function mouseClickHandler(evt, popupScreen) {
     isClickInWindow = popupScreen.contains(evt.target);
     if (! isClickInWindow) {
         cancelAnnotation(evt);
-        evt.stopPropagation();  // TODO: this doesn't seem to work as expected
+        evt.stopImmediatePropagation();  // TODO: this doesn't seem to work as expected
     }
 }
 
 function saveAnnotation(evt) {
-    displayAlert("Record will be saved when implemented", () => {});
+    clearAnnotationScreen();
+    displayAlert("Record will be saved when implemented", () => { });
     console.log("saving data example");
 }
 
 function cancelAnnotation(evt) {
+    console.log("canceling annotation");
+    clearAnnotationScreen();
+}
+
+function clearAnnotationScreen() {
     var annotationDiv;
 
+    document.removeEventListener("keyup", keyPressHandler);
+    document.removeEventListener("click", mouseClickHandler);
     annotationDiv = document.getElementById(POPUP_ID);
     annotationDiv.style.visibility = "hidden";
-    console.log("canceling annotation");
 }
+
 
