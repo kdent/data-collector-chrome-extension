@@ -51,29 +51,39 @@ function displayAnnotateScreen(selectedText, clientX, clientY, sendResponse) {
             return response.text();
         }).then(function(html) {
             annotationHTML = html;
-            console.log("initializing and displaying annotation screen");
+            console.log("initializing annotation screen");
             annotationDiv = initializeAnnotationScreen();
-            displaySelectedText(selectedText);
-            displayCategories(annotationOptions);
-            document.addEventListener("keyup", keyPressHandler);
-            document.addEventListener("click", mouseClickHandler);
-            annotationDiv.style.visibility = "visible";
-            positionAnnotationBox();
+            showAnnotationScreen(annotationDiv, selectedText);
         });
     } else {
-        console.log("displaying annotation screen");
-        displaySelectedText(selectedText);
-        displayCategories(annotationOptions);
-        document.addEventListener("keyup", keyPressHandler);
-        document.addEventListener("click", mouseClickHandler);
-        annotationDiv.style.visibility = "visible";
-        positionAnnotationBox();
+        showAnnotationScreen(annotationDiv, selectedText);
     }
 
 }
 
+function showAnnotationScreen(annotationDiv, selectedText) {
+    var backgroundElement;
+
+    console.log("displaying annotation screen");
+
+    backgroundElement = document.getElementById("annotation-background");
+    backgroundElement.style.display = "block";
+
+    displaySelectedText(selectedText);
+    displayCategories(annotationOptions);
+    document.addEventListener("keyup", keyPressHandler);
+    document.addEventListener("click", mouseClickHandler);
+    annotationDiv.style.visibility = "visible";
+    positionAnnotationBox();
+}
+
 function initializeAnnotationScreen() {
-    var annotationDiv;
+    var annotationDiv, backgroundElement;
+
+    /* Create background */
+    backgroundElement = document.createElement("div");
+    backgroundElement.id = "annotation-background";
+    document.body.appendChild(backgroundElement);
 
     /* Set up screen */
     annotationDiv = document.createElement("div");
@@ -245,7 +255,10 @@ function cancelAnnotation(evt) {
 }
 
 function clearAnnotationScreen() {
-    var annotationDiv;
+    var annotationDiv, annotationBackground;
+
+    annotationBackground = document.getElementById("annotation-background");
+    annotationBackground.style.display = "none";
 
     document.removeEventListener("keyup", keyPressHandler);
     document.removeEventListener("click", mouseClickHandler);

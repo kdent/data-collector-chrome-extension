@@ -1,9 +1,24 @@
+#annotation-background {
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 20; /* Sit on top */
+  padding-top: 100px; /* Location of the box */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(0,0,0); /* Fallback color */
+  background-color: rgba(0,0,0,0.7); /* Black w/ opacity */
+}
+
 #annotation-popup {
     visibility: hidden;
 /*    min-width: 250px; */
     width: auto;
     height: fit-content;
-    background-color: #efefef;
+/*    background-color: #efefef; */
+    background-color: #ffffff;
     color: #000;
     border-radius: 10px;     /* Rounded corners */
     border: 3px solid #73AD21;
@@ -11,10 +26,10 @@
     padding-bottom: 16;
     padding-right: 15px;
     padding-left: 15px;
-    position: absolute;
+    position: fixed;
     bottom: 200px;
     left: 25%;
-    z-index: 100;
+    z-index: 30;
     overflow-y: auto;
 }
 
