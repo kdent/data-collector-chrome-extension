@@ -14,23 +14,24 @@
 
 #annotation-popup {
     visibility: hidden;
-/*    min-width: 250px; */
     width: auto;
+    min-width: 250px;
+    max-width: 60vw;
     height: fit-content;
-/*    background-color: #efefef; */
+    max-height: 80vh;
     background-color: #ffffff;
     color: #000;
     border-radius: 10px;     /* Rounded corners */
-    border: 3px solid #73AD21;
     padding-top: 20px;
     padding-bottom: 16;
     padding-right: 15px;
     padding-left: 15px;
     position: fixed;
     bottom: 200px;
-    left: 25%;
+    top: 60px;
     z-index: 30;
-    overflow-y: auto;
+    overflow: auto;
+    font-family: "Google Sans",Roboto,Arial,sans-serif;
 }
 
 .annotate-form {
@@ -47,11 +48,18 @@
 .field-row .label-container {
   width: 25%;
   float: left;
+  text-align: right;
+  padding-right: 2px;
+  color: rgba(0, 0, 0, 0.6);
 }
 
 .field-row .field-container {
-  width: 75%;
-  float: left;
+  width: 70%;
+  float: right;
+}
+
+#category-select {
+    background-color: #f8f8f8;
 }
 
 #checkstep-selected-text {
@@ -60,20 +68,27 @@
 }
 
 #annotation-popup .checkstep-button {
-  background-color: #4CAF50; /* Green */
+/*  background-color: #4CAF50; */ /* Green */
+  background-color: #3479F6; /* Blue */
   border: none;
-  border-radius: 8px;
+  border-radius: 4px;
   color: white;
-  padding: 12px 22px;
+  padding: 8px 22px;
+  margin-right: 4px;
   text-align: center;
   text-decoration: none;
   display: inline-block;
   font-size: 16px;
 }
 
+#checkstep-button-group {
+  text-align: center;
+  margin: 12px;
+  position: relative;
+}
+
 #annotation-popup .checkstep-textarea {
   width: 90%;
-  margin: 15px;
   border: 2px solid #ccc;
   border-radius: 4px;
   color: black;

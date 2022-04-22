@@ -209,16 +209,17 @@ function displaySecondaryLabelCheckboxes(currentCategory) {
 }
 
 function positionAnnotationBox() {
-    var annotationBox, posX, posY;
+    var annotationBox, halfWidth, halfHeight, midPointWidth, midPointHeight;
 
     annotationBox = document.getElementById(POPUP_ID);
-    posY = Math.round(window.innerHeight/2 - annotationBox.offsetHeight/2);
-    posX = Math.round(window.innerWidth/2 - annotationBox.offsetWidth/2);
-    posY = posY + window.scrollY;
-    posX = posX + window.scrollX;
-    annotationBox.style.left = posX + "px";
-    annotationBox.style.top = posY + "px";
-    
+
+    halfWidth = parseInt(annotationBox.offsetWidth/2);
+    midPointWidth = parseInt(window.innerWidth/2);
+    annotationBox.style.left = (midPointWidth - halfWidth) + "px";
+
+    halfHeight = parseInt(annotationBox.offsetHeight/2);
+    midPointHeight = parseInt(window.innerHeight/2);
+    annotationBox.style.top = (midPointHeight - halfHeight) + "px";
 }
 
 function mouseClickHandler(evt) {

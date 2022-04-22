@@ -2,20 +2,14 @@
 <meta charset="utf-8">
 <link rel="stylesheet" type="css" href="annotation.css">
 
-<!-- gray background -->
-<div id="annotation-background" class="annotation-background"></div>
+<form class="annotate-form">
 
 <div class="field-row">
-  <div class="label-container">
-    <label>Selected Text:</label>
-  </div>
-
+  <div class="label-container"><label>Selected Text:</label></div>
   <div class="field-container">
     <div id="checkstep-selected-text"></div>
   </div>
 </div>
-
-<form class="annotate-form">
 
 <div class="field-row">
   <div class="label-container"><label>Category:</label></div>
@@ -51,13 +45,18 @@
   </div>
 </div>
 
+<!--
 <div class="field-row">
   <div class="label-container">&nbsp;</div>
   <div class="field-container">
+-->
+    <div id="checkstep-button-group">
     <button class="checkstep-button" type="button" id="checkstep-button-save">Save</button>
     <button class="checkstep-button" type="button" id="checkstep-button-cancel">Cancel</button>
   </div>
+<!--
 </div>
+-->
 
 
 </form>
