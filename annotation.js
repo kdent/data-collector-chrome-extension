@@ -37,28 +37,26 @@ function displayAnnotateScreen(selectedText, clientX, clientY, sendResponse) {
             if (! annotationOptions ) {
                 throw "Annotation config is empty";
             }
+            /*
+             * Set up the annotation popup window if it hasn't been invoked
+             * already.
+             */
+            annotationDiv = document.getElementById(POPUP_ID);
+            if (! annotationDiv ) {
+                annotationURL = chrome.runtime.getURL("annotation.html");
+                fetch(annotationURL).then((response) => {
+                    return response.text();
+                }).then(function(html) {
+                    annotationHTML = html;
+                    console.log("initializing annotation screen");
+                    annotationDiv = initializeAnnotationScreen();
+                    showAnnotationScreen(annotationDiv, selectedText);
+                });
+            } else {
+                showAnnotationScreen(annotationDiv, selectedText);
+            }
         });
     }
-
-    /*
-     * Set up the annotation popup window if it hasn't been invoked
-     * already.
-     */
-    annotationDiv = document.getElementById(POPUP_ID);
-    if (! annotationDiv ) {
-        annotationURL = chrome.runtime.getURL("annotation.html");
-        fetch(annotationURL).then((response) => {
-            return response.text();
-        }).then(function(html) {
-            annotationHTML = html;
-            console.log("initializing annotation screen");
-            annotationDiv = initializeAnnotationScreen();
-            showAnnotationScreen(annotationDiv, selectedText);
-        });
-    } else {
-        showAnnotationScreen(annotationDiv, selectedText);
-    }
-
 }
 
 function showAnnotationScreen(annotationDiv, selectedText) {
