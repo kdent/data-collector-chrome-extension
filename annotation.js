@@ -48,11 +48,48 @@ function displayAnnotateScreen(selectedText, clientX, clientY, sendResponse) {
                 annotationDiv = initializeAnnotationScreen();
                 showAnnotationScreen(annotationDiv, selectedText);
             });
+            getHighestZ();
         });
     } else {
         console.log("displaying annotation screen");
         annotationDiv = document.getElementById(POPUP_ID);
         showAnnotationScreen(annotationDiv, selectedText);
+    }
+}
+
+function getHighestZ() {
+    var nodeList;
+
+    nodeList = document.querySelectorAll("body *");
+    console.log(nodeList.constructor);
+    walkDom(nodeList[0]);
+}
+
+var maxZValue = 0;
+
+function walkDom(currentNode) {
+    var computedStyle, z;
+
+    if (currentNode) {
+        if (currentNode instanceof Element) {
+            computedStyle = window.getComputedStyle(currentNode);
+            if (computedStyle) {
+                z = parseInt(computedStyle.getPropertyValue("z-index"));
+                if (z && (z > maxZValue)) {
+                    maxZValue = z;
+                    console.log("incrementing z-index to " + maxZValue);
+                }
+            }
+
+        }
+    }
+
+    if (currentNode.firstChild) {
+        walkDom(currentNode.firstChild);
+    }
+
+    if (currentNode.nextSibling) {
+        walkDom(currentNode.nextSibling);
     }
 }
 
