@@ -48,7 +48,6 @@ function displayAnnotateScreen(selectedText, clientX, clientY, sendResponse) {
                 annotationDiv = initializeAnnotationScreen();
                 showAnnotationScreen(annotationDiv, selectedText);
             });
-            getHighestZ();
         });
     } else {
         console.log("displaying annotation screen");
@@ -57,53 +56,20 @@ function displayAnnotateScreen(selectedText, clientX, clientY, sendResponse) {
     }
 }
 
-function getHighestZ() {
-    var nodeList;
-
-    nodeList = document.querySelectorAll("body *");
-    console.log(nodeList.constructor);
-    walkDom(nodeList[0]);
-}
-
-var maxZValue = 0;
-
-function walkDom(currentNode) {
-    var computedStyle, z;
-
-    if (currentNode) {
-        if (currentNode instanceof Element) {
-            computedStyle = window.getComputedStyle(currentNode);
-            if (computedStyle) {
-                z = parseInt(computedStyle.getPropertyValue("z-index"));
-                if (z && (z > maxZValue)) {
-                    maxZValue = z;
-                    console.log("incrementing z-index to " + maxZValue);
-                }
-            }
-
-        }
-    }
-
-    if (currentNode.firstChild) {
-        walkDom(currentNode.firstChild);
-    }
-
-    if (currentNode.nextSibling) {
-        walkDom(currentNode.nextSibling);
-    }
-}
-
 function showAnnotationScreen(annotationDiv, selectedText) {
-    var backgroundElement;
+    var backgroundElement, maxZValue;
 
+    maxZValue = utils.getHighestZValue();
     backgroundElement = document.getElementById("annotation-background");
     backgroundElement.style.display = "block";
+    backgroundElement.style.zIndex = maxZValue + 1;
 
     displaySelectedText(selectedText);
     displayCategories(annotationOptions);
     document.addEventListener("keyup", keyPressHandler);
     document.addEventListener("click", mouseClickHandler);
     annotationDiv.style.visibility = "visible";
+    annotationDiv.style.zIndex = maxZValue + 2;
     positionAnnotationBox();
 }
 
@@ -203,7 +169,8 @@ function displaySubcategoryCheckboxes(currentCategory) {
     annotationOptions[currentCategory]['sub-categories'].forEach((subcat) => {
         let elementId = subcat.toLowerCase().replace(" ", "-");
         subCategoryHTML += '<div class="sub-category">';
-        subCategoryHTML += '<input type="checkbox" id="' + elementId + '">';
+        subCategoryHTML += '<input type="checkbox" id="' + elementId + '"' +
+            ' class="checkstep-checkbox">';
         subCategoryHTML += '<label for="' + elementId + '">';
         subCategoryHTML += ' ' + subcat + '</label>';
         subCategoryHTML += '</div>';
@@ -230,7 +197,8 @@ function displaySecondaryLabelCheckboxes(currentCategory) {
     secondaryLabelsHTML = "";
     secondaryLabelsList.forEach((label) => {
         let labelId = label.toLowerCase().replace(" ", "-");
-        secondaryLabelsHTML += '<input type="checkbox" id="' + labelId + '">';
+        secondaryLabelsHTML += '<input type="checkbox" id="' + labelId + '"' +
+            ' class="checkstep-checkbox">';
         secondaryLabelsHTML += '<label for="' + labelId + '">';
         secondaryLabelsHTML += ' ' + label + '</label>';
     });
@@ -250,6 +218,7 @@ function positionAnnotationBox() {
     halfHeight = parseInt(annotationBox.offsetHeight/2);
     midPointHeight = parseInt(window.innerHeight/2);
     annotationBox.style.top = (midPointHeight - halfHeight) + "px";
+
 }
 
 function mouseClickHandler(evt) {

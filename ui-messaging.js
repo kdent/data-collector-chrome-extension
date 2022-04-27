@@ -3,14 +3,16 @@
  */
 "use strict";
 
-
 function displayNotification(msg) {
-    var div, text_span;
+    var div, text_span, zIndex;
+
     /* Create the element to display the message. */
     div = document.createElement("div");
     div.id = "popup";
     div.className = "show";
     text_span = document.createElement("span");
+    zIndex = utils.getHighestZValue();
+    text_span.style.zIndex = zIndex + 1;
 
     div.appendChild(text_span);
 
@@ -28,7 +30,7 @@ function displayNotification(msg) {
 }
 
 function displayAlert(msg) {
-    var alertDiv, textDiv, okayButton;
+    var alertDiv, textDiv, okayButton, zIndex;
 
     alertDiv = document.createElement("div");
     alertDiv.id = "alert";
@@ -42,6 +44,9 @@ function displayAlert(msg) {
     okayButton.focus();
     alertDiv.appendChild(textDiv);
     alertDiv.appendChild(okayButton);
+    zIndex = utils.getHighestZValue();
+    alertDiv.style.zIndex = zIndex + 1;
+    console.log("z-order: " + (zIndex + 1));
 
     document.addEventListener("keyup", alertMsgKeyPressHandler);
 
