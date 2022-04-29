@@ -1,10 +1,19 @@
 "use strict";
 
 const POPUP_ID = "annotation-popup";
+const BACKGROUND_ID = "annotation-background";
 const LABEL_CONFIG_PATH = 'config/labels.json';
 let annotationOptions = undefined;
 let currentCategory = undefined;
 let annotationHTML = undefined;
+
+let annotation = {
+    "selected-text": "",
+    "class-label":  "",
+    "subcategories": [],
+    "checkstep-comment": "",
+    "secondary-labels": []
+};
 
 /*
  * Receive message to start annotating currently selected text.
@@ -60,7 +69,7 @@ function showAnnotationScreen(annotationDiv, selectedText) {
     var backgroundElement, maxZValue;
 
     maxZValue = utils.getHighestZValue();
-    backgroundElement = document.getElementById("annotation-background");
+    backgroundElement = document.getElementById(BACKGROUND_ID);
     backgroundElement.style.display = "block";
     backgroundElement.style.zIndex = maxZValue + 1;
 
@@ -78,7 +87,7 @@ function initializeAnnotationScreen() {
 
     /* Create background */
     backgroundElement = document.createElement("div");
-    backgroundElement.id = "annotation-background";
+    backgroundElement.id = BACKGROUND_ID;
     document.body.appendChild(backgroundElement);
 
     /* Set up screen */
@@ -239,13 +248,33 @@ function mouseClickHandler(evt) {
     isClickInWindow = popupScreen.contains(evt.target);
     if (! isClickInWindow) {
         cancelAnnotation(evt);
-        evt.stopImmediatePropagation();  // TODO: this doesn't seem to work as expected
     }
 }
 
 function saveAnnotation(evt) {
+    var subcatList;
+
     clearAnnotationScreen();
-    displayAlert("Record will be saved when implemented", () => { });
+
+    annotation["selected-text"] = document.getElementById("checkstep-selected-text");
+    annotation["class-label"] = document.getElementById("category-select").selectedOptions[0].label;
+    annotation["subcategories"] = [];
+
+    subcatList = document.querySelectorAll("div.sub-category input[type=\"checkbox\"]");
+    for (let i = 0; i < subcatList.length; i++) {
+        if (subcatList[i].checked) {
+            annotation["subcategories"].push(subcatList[i].id);
+        }
+    }
+
+/*
+    for () {
+        annotation["subcategories"].append(item.label);
+    });
+*/
+
+    alert(annotation["subcategories"]);
+
     console.log("saving data example");
 }
 
@@ -257,7 +286,7 @@ function cancelAnnotation(evt) {
 function clearAnnotationScreen() {
     var annotationDiv, annotationBackground;
 
-    annotationBackground = document.getElementById("annotation-background");
+    annotationBackground = document.getElementById(BACKGROUND_ID);
     annotationBackground.style.display = "none";
 
     document.removeEventListener("keyup", keyPressHandler);
