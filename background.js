@@ -76,8 +76,13 @@ loadConfigFromLocalStore();
  */
 chrome.runtime.onMessage.addListener(
   function(request, sender, sendResponse) {
-    console.log("request to update options received");
-    loadConfigFromLocalStore();
+
+    if (request.messageType === "options-update") {
+        console.log("request to update options received");
+        loadConfigFromLocalStore();
+    } else if (request.messageType === "save-annotation") {
+        console.log("time to save the annotation");
+    }
   }
 );
 

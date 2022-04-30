@@ -7,7 +7,7 @@ optionsButton.addEventListener("click", async () => {
     chrome.storage.local.set({"spreadsheetId": spreadSheetIdElement.value});
     chrome.storage.local.set({"sheetName": sheetElement.value});
     // Send message to background script to reload values.
-    chrome.runtime.sendMessage({optionsUpdate: true});
+    chrome.runtime.sendMessage({messageType: "options-update"});
     console.log("message sent");
     window.close();
 });

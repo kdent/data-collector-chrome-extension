@@ -11,7 +11,7 @@ let annotation = {
     "selected-text": "",
     "class-label":  "",
     "subcategories": [],
-    "checkstep-comment": "",
+    "checkstep-comments": "",
     "secondary-labels": []
 };
 
@@ -176,11 +176,10 @@ function displaySubcategoryCheckboxes(currentCategory) {
 
     subCategoryHTML = "<ul>";
     annotationOptions[currentCategory]['sub-categories'].forEach((subcat) => {
-        let elementId = subcat.toLowerCase().replace(" ", "-");
         subCategoryHTML += '<div class="sub-category">';
-        subCategoryHTML += '<input type="checkbox" id="' + elementId + '"' +
+        subCategoryHTML += '<input type="checkbox" id="' + subcat + '"' +
             ' class="checkstep-checkbox">';
-        subCategoryHTML += '<label for="' + elementId + '">';
+        subCategoryHTML += '<label for="' + subcat + '">';
         subCategoryHTML += ' ' + subcat + '</label>';
         subCategoryHTML += '</div>';
     });
@@ -195,7 +194,7 @@ function displaySecondaryLabelCheckboxes(currentCategory) {
         return;
     }
 
-    secondaryLabelsElement = document.getElementById('secondary-labels-list');
+    secondaryLabelsElement = document.getElementById('secondary-labels');
 
     secondaryLabelsList = annotationOptions[currentCategory]["secondary-labels"];
     if (! secondaryLabelsList || secondaryLabelsList.length == 0) {
@@ -205,10 +204,9 @@ function displaySecondaryLabelCheckboxes(currentCategory) {
 
     secondaryLabelsHTML = "";
     secondaryLabelsList.forEach((label) => {
-        let labelId = label.toLowerCase().replace(" ", "-");
-        secondaryLabelsHTML += '<input type="checkbox" id="' + labelId + '"' +
+        secondaryLabelsHTML += '<input type="checkbox" id="' + label + '"' +
             ' class="checkstep-checkbox">';
-        secondaryLabelsHTML += '<label for="' + labelId + '">';
+        secondaryLabelsHTML += '<label for="' + label + '">';
         secondaryLabelsHTML += ' ' + label + '</label>';
     });
     secondaryLabelsElement.innerHTML = secondaryLabelsHTML;
@@ -252,14 +250,14 @@ function mouseClickHandler(evt) {
 }
 
 function saveAnnotation(evt) {
-    var subcatList;
+    var subcatList, secondaryLabelsList, msg;
 
     clearAnnotationScreen();
 
     annotation["selected-text"] = document.getElementById("checkstep-selected-text");
     annotation["class-label"] = document.getElementById("category-select").selectedOptions[0].label;
-    annotation["subcategories"] = [];
 
+    annotation["subcategories"] = [];
     subcatList = document.querySelectorAll("div.sub-category input[type=\"checkbox\"]");
     for (let i = 0; i < subcatList.length; i++) {
         if (subcatList[i].checked) {
@@ -267,13 +265,21 @@ function saveAnnotation(evt) {
         }
     }
 
-/*
-    for () {
-        annotation["subcategories"].append(item.label);
-    });
-*/
+    annotation["checkstep-comments"] = document.getElementById("checkstep-comments").value;
 
-    alert(annotation["subcategories"]);
+    annotation["secondary-labels"] = [];
+    secondaryLabelsList = document.querySelectorAll("div#secondary-labels input[type=\"checkbox\"]");
+    for (let i = 0; i < secondaryLabelsList.length; i++) {
+        if (secondaryLabelsList[i].checked) {
+            annotation["secondary-labels"].push(secondaryLabelsList[i].id);
+        }
+    }
+
+    msg = {
+        messageType: "save-annotation",
+    };
+    msg.annotation = annotation;
+    chrome.runtime.sendMessage(msg);
 
     console.log("saving data example");
 }
