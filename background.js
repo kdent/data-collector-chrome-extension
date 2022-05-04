@@ -68,9 +68,6 @@ chrome.identity.getAuthToken({ 'interactive': true }, function (token) {
     spreadsheet.token = token;
 });
 
-/* As we are loaded, get configuration information. */
-loadConfigFromLocalStore();
-
 /*
  * The options script will send a message when config options are changed.
  */
@@ -79,13 +76,65 @@ chrome.runtime.onMessage.addListener(
 
     if (request.messageType === "options-update") {
         console.log("request to update options received");
-        loadConfigFromLocalStore();
     } else if (request.messageType === "save-annotation") {
-        console.log("time to save the annotation");
+        saveAnnotation(sender.tab, request.annotation);
     }
+
+    return true;
   }
 );
 
+function saveAnnotation(tab, annotation) {
+    var labelOptions, categoryInfo, spreadsheetRow;
+
+    /* Load label configuration */
+    chrome.storage.sync.get("labels", (options) => {
+        labelOptions = JSON.parse(options.labels);
+        categoryInfo = labelOptions[annotation["class-label"]];
+        spreadsheetRow = mapAnnotationToRow(categoryInfo, annotation);
+        spreadsheet.id = categoryInfo["spreadsheet-id"];
+        spreadsheet.range = categoryInfo["sheet-name"];
+        spreadsheet.writeRow(spreadsheetRow, tab);
+
+    });
+
+}
+
+function mapAnnotationToRow(categoryInfo, annotation) {
+    var row;
+
+    row = [];
+    row.push("External");       // Source Category
+    row.push("Observed");       // Data Type
+    row.push(annotation["selected-text"]);
+    row.push("FALSE");          // non-violating but review required
+
+    /* For each subcateogry mark it true or false according to annotaiton. */
+    categoryInfo["sub-categories"].forEach((subcat) => {
+        if (annotation.subcategories.includes(subcat)) {
+            row.push("TRUE");
+        } else {
+            row.push("FALSE");
+        }
+    });
+
+    /* For each secondary label mark true or false according to annotaiton. */
+    categoryInfo["secondary-labels"].forEach((secondary) => {
+        if (annotation["secondary-labels"].includes(secondary)) {
+            row.push("TRUE");
+        } else {
+            row.push("FALSE");
+        }
+    });
+
+    row.push(annotation["checkstep-comments"]);
+    row.push("");               // empty cell for customer comments. //
+    row.push(annotation["source-url"]);
+    row.push(annotation["page-title"]);
+
+    return row;
+
+}
 
 /*
  * Data objects.
@@ -125,21 +174,17 @@ let spreadsheet = {
         var range;
 
         if ( ! spreadsheet.id) {
-            let msg = {
+            chrome.tabs.sendMessage(tab.id, {
                 messageType: "alert",
                 messageText: "You must specify a spreadsheet ID in options before saving data."
-            };
-            chrome.tabs.sendMessage(tab.id, msg);
-            console.log("spreadsheet ID is null.");
+            });
             return false;
         }
         if ( ! spreadsheet.range) {
-            msg = {
+            chrome.tabs.sendMessage(tab.id, {
                 messageType: "alert",
                 messageText: "You must specify a sheet name in options before saving data."
-            };
-            chrome.tabs.sendMessage(tab.id, msg);
-            console.log("sheet name is null.");
+            });
             return false;
         }
 
@@ -148,7 +193,7 @@ let spreadsheet = {
         var valueRangeBody = {
             "range": range,
             "majorDimension": "ROWS",
-            "values": [ Object.values(data) ]
+            "values": data
         };
 
         console.log("passing array: " + Object.values(data));
@@ -192,20 +237,6 @@ let spreadsheet = {
     }
 }
 
-function loadConfigFromLocalStore() {
-    chrome.storage.local.get("spreadsheetId", ({ spreadsheetId }) => {
-        console.log("current spreadsheet id val: " + spreadsheetId);
-        spreadsheet.id = spreadsheetId;
-    });
-    chrome.storage.local.get("sheetName", ({ sheetName }) => {
-        console.log("current sheet name: " + sheetName);
-        spreadsheet.range = sheetName;
-    });
-    chrome.storage.local.get("classLabel", ({ classLabel }) => {
-        curClassLabel = classLabel;
-    });
-}
-
 /*
  * Handler for when a user has selected the menu item to collect a data
  * example and annotate it.
@@ -224,13 +255,6 @@ function annotateRequestHandler(clickData, tab) {
         {
          messageType: "show-annotation-screen",
          selectedText: clickData.selectionText
-        },
-        function(response) { 
-//        spreadsheet.writeRow(curExample, tab);
-            console.log("sending annotate request to content script");
-            if ( response === true ) {
-                console.log("now imma write thate dude");
-            }
         }
     );
 

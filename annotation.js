@@ -12,7 +12,9 @@ let annotation = {
     "class-label":  "",
     "subcategories": [],
     "checkstep-comments": "",
-    "secondary-labels": []
+    "secondary-labels": [],
+    "source-url": "",
+    "page-title": ""
 };
 
 /*
@@ -274,6 +276,9 @@ function saveAnnotation(evt) {
             annotation["secondary-labels"].push(secondaryLabelsList[i].id);
         }
     }
+
+    annotation["source-url"] = window.location.toString();
+    annotation["page-title"] = document.title;
 
     msg = {
         messageType: "save-annotation",
