@@ -9,7 +9,6 @@ let utils = {
 
         nodeList = document.querySelectorAll("body *");
         utils.walkDom(nodeList[0]);
-        console.log("return z: " + utils.maxZValue);
         return utils.maxZValue;
     },
 
@@ -23,7 +22,6 @@ let utils = {
                     z = parseInt(computedStyle.getPropertyValue("z-index"));
                     if (z && (z > utils.maxZValue)) {
                         utils.maxZValue = z;
-                        console.log("incrementing z-index to " + utils.maxZValue);
                     }
                 }
 

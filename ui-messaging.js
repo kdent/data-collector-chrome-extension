@@ -46,7 +46,6 @@ function displayAlert(msg) {
     alertDiv.appendChild(okayButton);
     zIndex = utils.getHighestZValue();
     alertDiv.style.zIndex = zIndex + 1;
-    console.log("z-order: " + (zIndex + 1));
 
     document.addEventListener("keyup", alertMsgKeyPressHandler);
 
@@ -61,7 +60,9 @@ function clearAlert() {
 
     document.removeEventListener("keyup", alertMsgKeyPressHandler);
     alertDiv = document.getElementById("alert");
-    alertDiv.remove();
+    if (alertDiv) {
+        alertDiv.remove();
+    }
     return true;
 }
 

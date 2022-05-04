@@ -6,13 +6,37 @@
 const LABEL_CONFIG_PATH = 'config/labels.json';
 const ANNOTATION_HTML_PATH = "annotation.html";
 
-/*
- * Events and actions at installation.
- */
-chrome.runtime.onInstalled.addListener(handleOnInstalled);
+
+// Get token needed for access to Google docs.
+chrome.identity.getAuthToken({ 'interactive': true }, function (token) {
+    console.log("got token: " + token);
+    googleSheet.token = token;
+});
 
 /*
- * Handler for onInstalled event.
+ * Add listeners.
+ */
+chrome.runtime.onInstalled.addListener(handleOnInstalled);
+chrome.contextMenus.onClicked.addListener(annotateRequestHandler);
+
+/* Listener for when options change. */
+chrome.runtime.onMessage.addListener(
+  function(request, sender, sendResponse) {
+
+    if (request.messageType === "options-update") {
+        console.log("request to update options received");
+    } else if (request.messageType === "save-annotation") {
+        saveAnnotation(sender.tab, request.annotation);
+    }
+
+    return true;
+  }
+);
+
+
+
+/*
+ * Event handlers.
  */
 function handleOnInstalled() {
     var labelConfigUrl, annotationHTMLUrl;
@@ -29,13 +53,29 @@ function handleOnInstalled() {
     fetch(labelConfigUrl)
         .then((response) => response.json())
         .then((json) => storeLabelConfig(json));
-
-    /* Get the HTML for display annotation screen. Store it for content scripts to use. */
-    annotationHTMLUrl = chrome.runtime.getURL(ANNOTATION_HTML_PATH);
-    fetch(annotationHTMLUrl)
-        .then((response) => storeAnnotationHTML(response));
 }
 
+
+/*
+ * Handler for when a user has selected the menu item to collect a data
+ * example and annotate it.
+ */
+function annotateRequestHandler(clickData, tab) {
+    var curExample;
+
+    chrome.tabs.sendMessage(tab.id,
+        {
+         messageType: "show-annotation-screen",
+         selectedText: clickData.selectionText
+        }
+    );
+
+}
+
+
+/*
+ * Read label configuration file and store it in Chrome's extension store.
+ */
 function storeLabelConfig(labelConfigJson) {
     var str = JSON.stringify(labelConfigJson);
     chrome.storage.sync.set({'labels': JSON.stringify(labelConfigJson)},
@@ -45,45 +85,6 @@ function storeLabelConfig(labelConfigJson) {
     );
 }
 
-function storeAnnotationHTML(htmlContents) {
-    chrome.storage.sync.set({'html': htmlContents},
-      function() {
-        console.log("storing HTML for annotations screen");
-        console.log(htmlContents);
-      }
-    );
-}
-
-
-/*
- * Events and actions at startup time.
- */
-
-// Add handler for when extension is invoked from the context menu.
-chrome.contextMenus.onClicked.addListener(annotateRequestHandler);
-
-// Get token needed for access to Google docs.
-chrome.identity.getAuthToken({ 'interactive': true }, function (token) {
-    console.log("got token: " + token);
-    spreadsheet.token = token;
-});
-
-/*
- * The options script will send a message when config options are changed.
- */
-chrome.runtime.onMessage.addListener(
-  function(request, sender, sendResponse) {
-
-    if (request.messageType === "options-update") {
-        console.log("request to update options received");
-    } else if (request.messageType === "save-annotation") {
-        saveAnnotation(sender.tab, request.annotation);
-    }
-
-    return true;
-  }
-);
-
 function saveAnnotation(tab, annotation) {
     var labelOptions, categoryInfo, spreadsheetRow;
 
@@ -92,9 +93,9 @@ function saveAnnotation(tab, annotation) {
         labelOptions = JSON.parse(options.labels);
         categoryInfo = labelOptions[annotation["class-label"]];
         spreadsheetRow = mapAnnotationToRow(categoryInfo, annotation);
-        spreadsheet.id = categoryInfo["spreadsheet-id"];
-        spreadsheet.range = categoryInfo["sheet-name"];
-        spreadsheet.writeRow(spreadsheetRow, tab);
+        googleSheet.id = categoryInfo["spreadsheet-id"];
+        googleSheet.range = categoryInfo["sheet-name"];
+        googleSheet.writeRow(spreadsheetRow, tab);
 
     });
 
@@ -133,37 +134,10 @@ function mapAnnotationToRow(categoryInfo, annotation) {
     row.push(annotation["page-title"]);
 
     return row;
-
 }
 
-/*
- * Data objects.
- */
 
-let curClassLabel = null;
-
-function DataSample() {
-    this.sourceCategory = 'External';
-    this.dataType = 'Observed';
-    this.content = '';
-    this.hate = '';
-    this.hateViolentSpeech = '';
-    this.hateDehumanizingComparisions = '';
-    this.hateNegativeGeneralisation = '';
-    this.hateExcludeSegregateCurse = ''; 
-    this.hateSlurs = '';
-    this.bullying = '';
-    this.commentCheckstep = '';
-    this.checkedByHopin = '';
-    this.useForExample = '';
-    this.hopinVerificationDate = '';
-    this.commentHopin = '';
-    this.link = '';
-    this.originalSource = '';
-    this.dateCollected = '';
-}
-
-let spreadsheet = {
+let googleSheet = {
     id: null,
     range: null,
     valueInputOption: 'USER_ENTERED',
@@ -173,14 +147,14 @@ let spreadsheet = {
     writeRow: function(data, tab) {
         var range;
 
-        if ( ! spreadsheet.id) {
+        if ( ! googleSheet.id) {
             chrome.tabs.sendMessage(tab.id, {
                 messageType: "alert",
                 messageText: "You must specify a spreadsheet ID in options before saving data."
             });
             return false;
         }
-        if ( ! spreadsheet.range) {
+        if ( ! googleSheet.range) {
             chrome.tabs.sendMessage(tab.id, {
                 messageType: "alert",
                 messageText: "You must specify a sheet name in options before saving data."
@@ -188,7 +162,7 @@ let spreadsheet = {
             return false;
         }
 
-        range = "" + spreadsheet.range + "!A1:G1";
+        range = "" + googleSheet.range + "!A1:G1";
 
         var valueRangeBody = {
             "range": range,
@@ -201,12 +175,12 @@ let spreadsheet = {
         let init = {
             method: 'POST',
             headers: {
-            Authorization: 'Bearer ' + spreadsheet.token, 'Content-Type': 'application/json'
+            Authorization: 'Bearer ' + googleSheet.token, 'Content-Type': 'application/json'
             },
             body: JSON.stringify(valueRangeBody)
         };
 
-        let url = "https://sheets.googleapis.com/v4/spreadsheets/" + spreadsheet.id + "/values/" + range + ":append?valueInputOption=USER_ENTERED&insertDataOption=INSERT_ROWS";
+        let url = "https://sheets.googleapis.com/v4/spreadsheets/" + googleSheet.id + "/values/" + range + ":append?valueInputOption=USER_ENTERED&insertDataOption=INSERT_ROWS";
 
         fetch(url, init)
           .then((response) => response.json())
@@ -235,28 +209,5 @@ let spreadsheet = {
           });
 
     }
-}
-
-/*
- * Handler for when a user has selected the menu item to collect a data
- * example and annotate it.
- */
-function annotateRequestHandler(clickData, tab) {
-    var curExample;
-
-    console.log("received request to annotate data example");
-    curExample = new DataSample();
-    curExample.content = clickData.selectionText;
-    curExample.originalSource = tab.url;
-    curExample.dateCollected = new Date(Date.now()).toUTCString();
-    curExample.hate = true;
-
-    chrome.tabs.sendMessage(tab.id,
-        {
-         messageType: "show-annotation-screen",
-         selectedText: clickData.selectionText
-        }
-    );
-
 }
 

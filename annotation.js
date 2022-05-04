@@ -14,11 +14,12 @@ let annotation = {
     "checkstep-comments": "",
     "secondary-labels": [],
     "source-url": "",
-    "page-title": ""
+    "page-title": "",
+    "collected-date": ""
 };
 
 /*
- * Receive message to start annotating currently selected text.
+ * Listener to receive  message to start annotating currently selected text.
  */
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 
@@ -43,7 +44,6 @@ function displayAnnotateScreen(selectedText, clientX, clientY, sendResponse) {
      */
     if (! annotationOptions ) {
         chrome.storage.sync.get('labels', (options) => {
-            console.log(options.labels);
             annotationOptions = JSON.parse(options.labels);
             if (! annotationOptions ) {
                 throw "Annotation config is empty";
@@ -279,6 +279,7 @@ function saveAnnotation(evt) {
 
     annotation["source-url"] = window.location.toString();
     annotation["page-title"] = document.title;
+    annotation["collected-date"] = new Date(Date.now()).toUTCString();
 
     msg = {
         messageType: "save-annotation",
