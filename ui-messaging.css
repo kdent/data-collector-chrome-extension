@@ -55,7 +55,7 @@
     padding: 16px;
     z-index: 120;
     position: fixed;
-    top: 5%;
+    top: 15%;
     left: 50%;
     margin-right: -50%;
     transform: translate(-50%, -50%)

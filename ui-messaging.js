@@ -72,15 +72,11 @@ function clearAlert() {
 chrome.runtime.onMessage.addListener( function(request, sender, sendResponse) {
 
     if (request.messageType === "notification") {
-        displayNotification(request.messageText, sendResponse);
-        sendReponse(true);
+        displayNotification(request.messageText);
     } else if (request.messageType === "alert") {
-        displayAlert(request.messageText, sendResponse);
-        sendResponse(true);
-    } else {
-        sendResponse(false);
+        displayAlert(request.messageText);
     }
-
+    return true;
 });
 
 function alertMsgKeyPressHandler(evt) {

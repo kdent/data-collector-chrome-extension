@@ -256,7 +256,7 @@ function saveAnnotation(evt) {
 
     clearAnnotationScreen();
 
-    annotation["selected-text"] = document.getElementById("checkstep-selected-text");
+    annotation["selected-text"] = document.getElementById("checkstep-selected-text").textContent;
     annotation["class-label"] = document.getElementById("category-select").selectedOptions[0].label;
 
     annotation["subcategories"] = [];

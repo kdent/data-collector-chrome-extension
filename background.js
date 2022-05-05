@@ -34,7 +34,6 @@ chrome.runtime.onMessage.addListener(
 );
 
 
-
 /*
  * Event handlers.
  */
@@ -78,12 +77,9 @@ function annotateRequestHandler(clickData, tab) {
  */
 function storeLabelConfig(labelConfigJson) {
     var str = JSON.stringify(labelConfigJson);
-    chrome.storage.sync.set({'labels': JSON.stringify(labelConfigJson)},
-      function() {
-        console.log("storing annotations label information: " + JSON.stringify(labelConfigJson));
-      }
-    );
+    chrome.storage.sync.set({'labels': JSON.stringify(labelConfigJson)});
 }
+
 
 function saveAnnotation(tab, annotation) {
     var labelOptions, categoryInfo, spreadsheetRow;
@@ -101,6 +97,7 @@ function saveAnnotation(tab, annotation) {
 
 }
 
+
 function mapAnnotationToRow(categoryInfo, annotation) {
     var row;
 
@@ -108,23 +105,24 @@ function mapAnnotationToRow(categoryInfo, annotation) {
     row.push("External");       // Source Category
     row.push("Observed");       // Data Type
     row.push(annotation["selected-text"]);
-    row.push("FALSE");          // non-violating but review required
+    row.push(false);            // non-violating but review required
+    row.push(true);             // Set current label as true
 
     /* For each subcateogry mark it true or false according to annotaiton. */
     categoryInfo["sub-categories"].forEach((subcat) => {
         if (annotation.subcategories.includes(subcat)) {
-            row.push("TRUE");
+            row.push(true);
         } else {
-            row.push("FALSE");
+            row.push(false);
         }
     });
 
     /* For each secondary label mark true or false according to annotaiton. */
     categoryInfo["secondary-labels"].forEach((secondary) => {
         if (annotation["secondary-labels"].includes(secondary)) {
-            row.push("TRUE");
+            row.push(true);
         } else {
-            row.push("FALSE");
+            row.push(true);
         }
     });
 
@@ -132,6 +130,7 @@ function mapAnnotationToRow(categoryInfo, annotation) {
     row.push("");               // empty cell for customer comments. //
     row.push(annotation["source-url"]);
     row.push(annotation["page-title"]);
+    row.push(annotation["collected-date"]);
 
     return row;
 }
@@ -167,7 +166,7 @@ let googleSheet = {
         var valueRangeBody = {
             "range": range,
             "majorDimension": "ROWS",
-            "values": data
+            "values": [ Object.values(data) ]
         };
 
         console.log("passing array: " + Object.values(data));
