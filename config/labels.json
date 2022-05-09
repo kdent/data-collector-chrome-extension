@@ -1,45 +1,64 @@
 {
-    "Hate": {
-        "spreadsheet-id": "1o4hRAyBO74YxJ_PlC_dKzD6TIcAU685wBsp8KsadPdk",
-        "sheet-name": "Hate",
-        "sub-categories": ["Dehumanizing comparisons", "Violent Speech", "Negative Generalization", "Exclude, segregate", "Slurs"],
-        "secondary-labels": ["Bullying"]
-    },
-    "Bullying": {
-        "spreadsheet-id": "1o4hRAyBO74YxJ_PlC_dKzD6TIcAU685wBsp8KsadPdk",
-        "sheet-name": "Bullying",
-        "sub-categories": ["Sexual Harassment", "Intimidation/Threats/Claims", "Insult/Abuse/Humiliation"],
-        "secondary-labels": []
-    },
-    "Explicit": {
-        "spreadsheet-id": "1o4hRAyBO74YxJ_PlC_dKzD6TIcAU685wBsp8KsadPdk",
-        "sheet-name": "Explicit",
-        "sub-categories": [],
-        "secondary-labels": []
-    },
-    "PII/Doxing": {
-        "spreadsheet-id": "1o4hRAyBO74YxJ_PlC_dKzD6TIcAU685wBsp8KsadPdk",
-        "sheet-name": "PII",
-        "sub-categories": [],
-        "secondary-labels": []
-    },
-    "CSAM": {
-        "spreadsheet-id": "1o4hRAyBO74YxJ_PlC_dKzD6TIcAU685wBsp8KsadPdk",
-        "sheet-name": "CSAM",
-        "sub-categories": [],
-        "secondary-labels": []
-    },
-    "Terrorism": {
-        "spreadsheet-id": "1o4hRAyBO74YxJ_PlC_dKzD6TIcAU685wBsp8KsadPdk",
-        "sheet-name": "Terrorism",
-        "sub-categories": [],
-        "secondary-labels": []
-    },
-    "Spam": {
-        "spreadsheet-id": "1o4hRAyBO74YxJ_PlC_dKzD6TIcAU685wBsp8KsadPdk",
-        "sheet-name": "Spam",
-        "sub-categories": ["Financial Scam", "Sexual Clickbait", "Health/Beauty Clickbait", "Other Unrealistic Promises", "Misleading Content", "Impersonation", "Like/Share baiting"],
-        "secondary-labels": []
-    }
+  "Bullying": {
+    "secondary-labels": [],
+    "sheet-name": "Bullying",
+    "spreadsheet-id": "1o4hRAyBO74YxJ_PlC_dKzD6TIcAU685wBsp8KsadPdk",
+    "sub-categories": [
+      "Sexual Harassment",
+      "Intimidation/Threats/Claims",
+      "Insult/Abuse/Humiliation"
+    ]
+  },
+  "CSAM": {
+    "secondary-labels": [],
+    "sheet-name": "CSAM",
+    "spreadsheet-id": "1o4hRAyBO74YxJ_PlC_dKzD6TIcAU685wBsp8KsadPdk",
+    "sub-categories": []
+  },
+  "Explicit": {
+    "secondary-labels": [],
+    "sheet-name": "Explicit",
+    "spreadsheet-id": "1o4hRAyBO74YxJ_PlC_dKzD6TIcAU685wBsp8KsadPdk",
+    "sub-categories": []
+  },
+  "Hate": {
+    "secondary-labels": [
+      "Bullying"
+    ],
+    "sheet-name": "Hate",
+    "spreadsheet-id": "1o4hRAyBO74YxJ_PlC_dKzD6TIcAU685wBsp8KsadPdk",
+    "sub-categories": [
+      "Dehumanizing comparisons",
+      "Violent Speech",
+      "Negative Generalization",
+      "Exclude, segregate",
+      "Slurs"
+    ]
+  },
+  "PII/Doxing": {
+    "secondary-labels": [],
+    "sheet-name": "PII",
+    "spreadsheet-id": "1o4hRAyBO74YxJ_PlC_dKzD6TIcAU685wBsp8KsadPdk",
+    "sub-categories": []
+  },
+  "Spam": {
+    "secondary-labels": [],
+    "sheet-name": "Spam",
+    "spreadsheet-id": "1o4hRAyBO74YxJ_PlC_dKzD6TIcAU685wBsp8KsadPdk",
+    "sub-categories": [
+      "Financial Scam",
+      "Sexual Clickbait",
+      "Health/Beauty Clickbait",
+      "Other Unrealistic Promises",
+      "Misleading Content",
+      "Impersonation",
+      "Like/Share baiting"
+    ]
+  },
+  "Terrorism": {
+    "secondary-labels": [],
+    "sheet-name": "Terrorism",
+    "spreadsheet-id": "1o4hRAyBO74YxJ_PlC_dKzD6TIcAU685wBsp8KsadPdk",
+    "sub-categories": []
+  }
 }
-

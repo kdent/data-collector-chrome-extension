@@ -97,9 +97,30 @@ function saveAnnotation(tab, annotation) {
 
 }
 
-
+/*
+ * Maps categoryInfo json object to an array to insert into the
+ * Google sheet.
+ *
+ * Returns the row as an array.
+ */
 function mapAnnotationToRow(categoryInfo, annotation) {
     var row;
+
+    /*
+     * Expected Columns:
+     *
+     * - Source Category ("External")
+     * - Data Type ("Observed")
+     * - Collected Text
+     * - Non-violating but review required
+     * - Label
+     * - Sub-categories(+)
+     * - Secondary Labels(+)
+     * - Checkstep Comments
+     * - Source URL
+     * - Page Title
+     * - Date of Collection
+     */
 
     row = [];
     row.push("External");       // Source Category

@@ -77,6 +77,7 @@ function showAnnotationScreen(annotationDiv, selectedText) {
 
     displaySelectedText(selectedText);
     displayCategories(annotationOptions);
+    document.getElementById("checkstep-comments").value = "";
     document.addEventListener("keyup", keyPressHandler);
     document.addEventListener("click", mouseClickHandler);
     annotationDiv.style.visibility = "visible";
