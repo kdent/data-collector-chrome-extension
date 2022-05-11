@@ -90,7 +90,7 @@ function saveAnnotation(tab, annotation) {
         categoryInfo = labelOptions[annotation["class-label"]];
         spreadsheetRow = mapAnnotationToRow(categoryInfo, annotation);
         googleSheet.id = categoryInfo["spreadsheet-id"];
-        googleSheet.range = categoryInfo["sheet-name"];
+        googleSheet.sheetName = categoryInfo["sheet-name"];
         googleSheet.writeRow(spreadsheetRow, tab);
 
     });
@@ -159,7 +159,7 @@ function mapAnnotationToRow(categoryInfo, annotation) {
 
 let googleSheet = {
     id: null,
-    range: null,
+    sheetName: null,
     valueInputOption: 'USER_ENTERED',
     insertDataOption: 'INSERT_ROWS',
     token: "",
@@ -174,7 +174,7 @@ let googleSheet = {
             });
             return false;
         }
-        if ( ! googleSheet.range) {
+        if ( ! googleSheet.sheetName) {
             chrome.tabs.sendMessage(tab.id, {
                 messageType: "alert",
                 messageText: "You must specify a sheet name in options before saving data."
@@ -182,7 +182,7 @@ let googleSheet = {
             return false;
         }
 
-        range = "" + googleSheet.range + "!A1:G1";
+        range = "" + googleSheet.sheetName + "!A:G";
 
         var valueRangeBody = {
             "range": range,
@@ -220,6 +220,7 @@ let googleSheet = {
                 }
                 chrome.tabs.sendMessage(tab.id, msg);
             } else {
+                console.log("Google Sheet Response: " + JSON.stringify(respData));
                 let msg = {
                     messageType: "notification",
                     messageText: "Data saved to Google Sheet."
