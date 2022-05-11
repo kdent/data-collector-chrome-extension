@@ -56,18 +56,18 @@ function displayAnnotateScreen(selectedText, clientX, clientY, sendResponse) {
             }).then(function(html) {
                 annotationHTML = html;
                 console.log("initializing annotation screen");
-                annotationDiv = initializeAnnotationScreen();
-                showAnnotationScreen(annotationDiv, selectedText);
+                annotationDiv = createAnnotationScreen();
+                displayAnnotationScreen(annotationDiv, selectedText);
             });
         });
     } else {
         console.log("displaying annotation screen");
         annotationDiv = document.getElementById(POPUP_ID);
-        showAnnotationScreen(annotationDiv, selectedText);
+        displayAnnotationScreen(annotationDiv, selectedText);
     }
 }
 
-function showAnnotationScreen(annotationDiv, selectedText) {
+function displayAnnotationScreen(annotationDiv, selectedText) {
     var backgroundElement, maxZValue;
 
     maxZValue = utils.getHighestZValue();
@@ -85,7 +85,7 @@ function showAnnotationScreen(annotationDiv, selectedText) {
     positionAnnotationBox();
 }
 
-function initializeAnnotationScreen() {
+function createAnnotationScreen() {
     var annotationDiv, backgroundElement;
 
     /* Create background */
@@ -130,13 +130,16 @@ function displayCategories(annotationOptions) {
         }
     });
 
+    /* If the currentCategory isn't set, use the first name in the list. */
+    if (! currentCategory) {
+        currentCategory = categoryList[0];
+    }
+
     /*
      * Sub-category checkboxes.
      */
-    if (currentCategory) {
-        displaySubcategoryCheckboxes(currentCategory);
-        displaySecondaryLabelCheckboxes(currentCategory);
-    }
+    displaySubcategoryCheckboxes(currentCategory);
+    displaySecondaryLabelCheckboxes(currentCategory);
  
     document.getElementById('category-select').innerHTML = categorySelectHTML;
 }
