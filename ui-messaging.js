@@ -33,10 +33,10 @@ function displayAlert(msg) {
     var alertDiv, textDiv, okayButton, zIndex;
 
     alertDiv = document.createElement("div");
-    alertDiv.id = "alert";
+    alertDiv.id = "checkstep-alert";
     textDiv = document.createElement("div");
     okayButton = document.createElement("button");
-    okayButton.className = "alert-button";
+    okayButton.className = "checkstep-alert-button";
     okayButton.innerHTML = "Ok";
     okayButton.onclick = function () {
         alertDiv.remove();
@@ -59,7 +59,7 @@ function clearAlert() {
     var alertDiv;
 
     document.removeEventListener("keyup", alertMsgKeyPressHandler);
-    alertDiv = document.getElementById("alert");
+    alertDiv = document.getElementById("checkstep-alert");
     if (alertDiv) {
         alertDiv.remove();
     }

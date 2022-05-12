@@ -45,7 +45,7 @@
   to {bottom: 0; opacity: 0;}
 }
 
-#alert {
+#checkstep-alert {
     visibility: visible;
     min-width: 250px;
     background-color: #f44336;
@@ -61,6 +61,6 @@
     transform: translate(-50%, -50%)
 }
 
-.alert-button {
+.checkstep-alert-button {
     margin-top: 15px;
 }
