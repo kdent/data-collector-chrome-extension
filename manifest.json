@@ -2,7 +2,7 @@
   "name": "Checkstep Data Collector",
   "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAlJ9Xu7ghEeaZ0RyBT6HH70yLWEaJ1GpQWvOHceKo/VANgsklXlIw/DmK5Hggittz+oO3R1OKyAbf0mXCPJhKKZnVn9gmCECzBA1RS4fZd0vjAz4bl1zTDEGzersgpOYMCp73eofDjnZ6/SfzkhQWjfnpkSr4oEK15jpN0QQb4iqae1VF5zynjLJZCgS7YCVGpymfSv5h2C7BTYa1rJNIscnXTHFN2Hwej/JNpk/uCciWEAKvK1QFsixOwMMLCvbvIdA2zhS/HxJVAKPHDKkbM6XsElQoAPqZT9Tsu+1xBhn1Ackc5S/fk1WM06zohRYSGKNQuR47Pr7RhqVr+JZA7wIDAQAB",
   "description": "Data collection for text samples.",
-  "version": "0.0.2.1",
+  "version": "0.0.2.2",
   "author": "Kyle",
   "manifest_version": 3,
 

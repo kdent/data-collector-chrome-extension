@@ -15,7 +15,6 @@ let annotation = {
     "checkstep-comments": "",
     "secondary-labels": [],
     "source-url": "",
-    "page-title": "",
     "collected-date": ""
 };
 
@@ -286,7 +285,6 @@ function saveAnnotation(evt) {
     }
 
     annotation["source-url"] = window.location.toString();
-    annotation["page-title"] = document.title;
     annotation["collected-date"] = new Date(Date.now()).toUTCString();
 
     msg = {

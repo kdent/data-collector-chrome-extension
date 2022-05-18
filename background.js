@@ -155,7 +155,6 @@ function mapAnnotationToRow(categoryInfo, annotation) {
     row.push(annotation["checkstep-comments"]);
     row.push("");               // empty cell for customer comments. //
     row.push(annotation["source-url"]);
-    row.push(annotation["page-title"]);
     row.push(annotation["collected-date"]);
 
     return row;
