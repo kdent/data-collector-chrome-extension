@@ -10,6 +10,7 @@ let annotationHTML = undefined;
 let annotation = {
     "selected-text": "",
     "class-label":  "",
+    "non-violating": false,
     "subcategories": [],
     "checkstep-comments": "",
     "secondary-labels": [],
@@ -78,6 +79,7 @@ function displayAnnotationScreen(annotationDiv, selectedText) {
     displaySelectedText(selectedText);
     displayCategories(annotationOptions);
     document.getElementById("checkstep-comments").value = "";
+    document.getElementById("non-violating-checkbox").checked = false;
     document.addEventListener("keyup", keyPressHandler);
     document.addEventListener("click", mouseClickHandler);
     annotationDiv.style.visibility = "visible";
@@ -262,6 +264,8 @@ function saveAnnotation(evt) {
 
     annotation["selected-text"] = document.getElementById("checkstep-selected-text").textContent;
     annotation["class-label"] = document.getElementById("category-select").selectedOptions[0].label;
+
+    annotation["non-violating"] = document.getElementById("non-violating-checkbox").checked;
 
     annotation["subcategories"] = [];
     subcatList = document.querySelectorAll("div.sub-category input[type=\"checkbox\"]");

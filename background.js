@@ -127,7 +127,12 @@ function mapAnnotationToRow(categoryInfo, annotation) {
     row.push("Observed");       // Data Type
     row.push(annotation["selected-text"]);
     row.push(false);            // non-violating but review required
-    row.push(true);             // Set current label as true
+    // Set current label as true or false.
+    if (annotation["non-violating"]) {
+        row.push(false);
+    } else {
+        row.push(true);
+    }
 
     /* For each subcateogry mark it true or false according to annotaiton. */
     categoryInfo["sub-categories"].forEach((subcat) => {

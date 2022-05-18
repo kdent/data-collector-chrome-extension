@@ -58,6 +58,11 @@
   float: right;
 }
 
+.checkstep-column {
+  float: left;
+  width: 75%;
+}
+
 #category-select {
     background-color: #f8f8f8;
 }
@@ -69,6 +74,13 @@
 
 div#subcategory-list ul {
     padding: 0px;
+}
+
+#non-violating-checkbox {
+    opacity: 1;
+    margin: 5px 0 0 5px;
+    position: 0;
+    pointer-events: auto;
 }
 
 input.checkstep-checkbox {
