@@ -26,6 +26,8 @@
     "128": "/images/checkstep_logo128.png"
   },
 
+  "options_page": "options.html",
+
   "background": {
     "service_worker": "background.js"
   },

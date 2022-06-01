@@ -1,8 +1,8 @@
 {
   "Bullying": {
     "secondary-labels": [],
-    "sheet-name": "Bullying Week 4",
-    "spreadsheet-id": "1yY1lada03PugRqzyUaI2Rhu5ovesy9Sa_mrolswXMnE",
+    "sheet-name": "Bullying",
+    "spreadsheet-id": "",
     "sub-categories": [
       "Sexual harassment/Intent to engage in BH",
       "Intimidation/Threats/Claims",
@@ -12,21 +12,21 @@
   "CSAM": {
     "secondary-labels": [],
     "sheet-name": "CSAM",
-    "spreadsheet-id": "1o4hRAyBO74YxJ_PlC_dKzD6TIcAU685wBsp8KsadPdk",
+    "spreadsheet-id": "1Q9DiLPE7V9WPMVSynhs-WYEj97XJeKRtmpK_7MNTulE",
     "sub-categories": []
   },
   "Explicit": {
     "secondary-labels": [],
     "sheet-name": "Explicit",
-    "spreadsheet-id": "1o4hRAyBO74YxJ_PlC_dKzD6TIcAU685wBsp8KsadPdk",
+    "spreadsheet-id": "1Q9DiLPE7V9WPMVSynhs-WYEj97XJeKRtmpK_7MNTulE",
     "sub-categories": []
   },
   "Hate": {
     "secondary-labels": [
       "Bullying"
     ],
-    "sheet-name": "Hate",
-    "spreadsheet-id": "1o4hRAyBO74YxJ_PlC_dKzD6TIcAU685wBsp8KsadPdk",
+    "sheet-name": "Hate 300",
+    "spreadsheet-id": "1Q9DiLPE7V9WPMVSynhs-WYEj97XJeKRtmpK_7MNTulE",
     "sub-categories": [
       "Dehumanizing comparisons",
       "Violent Speech",
@@ -38,13 +38,13 @@
   "PII/Doxing": {
     "secondary-labels": [],
     "sheet-name": "PII",
-    "spreadsheet-id": "1o4hRAyBO74YxJ_PlC_dKzD6TIcAU685wBsp8KsadPdk",
+    "spreadsheet-id": "1Q9DiLPE7V9WPMVSynhs-WYEj97XJeKRtmpK_7MNTulE",
     "sub-categories": []
   },
   "Spam": {
     "secondary-labels": [],
     "sheet-name": "Spam",
-    "spreadsheet-id": "1o4hRAyBO74YxJ_PlC_dKzD6TIcAU685wBsp8KsadPdk",
+    "spreadsheet-id": "1Q9DiLPE7V9WPMVSynhs-WYEj97XJeKRtmpK_7MNTulE",
     "sub-categories": [
       "Financial Scam",
       "Sexual Clickbait",
@@ -58,7 +58,7 @@
   "Terrorism": {
     "secondary-labels": [],
     "sheet-name": "Terrorism",
-    "spreadsheet-id": "1o4hRAyBO74YxJ_PlC_dKzD6TIcAU685wBsp8KsadPdk",
+    "spreadsheet-id": "1Q9DiLPE7V9WPMVSynhs-WYEj97XJeKRtmpK_7MNTulE",
     "sub-categories": []
   }
 }

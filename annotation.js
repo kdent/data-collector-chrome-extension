@@ -19,7 +19,7 @@ let annotation = {
 };
 
 /*
- * Listener to receive  message to start annotating currently selected text.
+ * Listener to receive message to start annotating currently selected text.
  */
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 

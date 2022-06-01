@@ -33,6 +33,10 @@ chrome.runtime.onMessage.addListener(
   }
 );
 
+chrome.action.onClicked.addListener(function(tab) {
+  chrome.action.setTitle({tabId: tab.id, title: "You are on tab:" + tab.id});
+});
+
 
 /*
  * Event handlers.
@@ -61,6 +65,15 @@ function handleOnInstalled() {
  */
 function annotateRequestHandler(clickData, tab) {
     var curExample;
+
+    console.log("selected text: " + clickData.selectionText);
+
+    console.log(clickData);
+    for (var prop in clickData) {
+        if (clickData.hasOwnProperty(prop)) {
+            console.log(prop + ": " + clickData[prop]);
+        }
+    }
 
     chrome.tabs.sendMessage(tab.id,
         {
@@ -143,12 +156,12 @@ function mapAnnotationToRow(categoryInfo, annotation) {
         }
     });
 
-    /* For each secondary label mark true or false according to annotaiton. */
+    /* For each secondary label mark true or false according to annotation. */
     categoryInfo["secondary-labels"].forEach((secondary) => {
         if (annotation["secondary-labels"].includes(secondary)) {
             row.push(true);
         } else {
-            row.push(true);
+            row.push(false);
         }
     });
 
