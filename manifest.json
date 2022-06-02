@@ -36,7 +36,7 @@
     {
         "matches": ["https://*/*"],
         "js": ["ui-messaging.js", "annotation.js", "utils.js"],
-        "css": ["ui-messaging.css", "annotation.css", "constants.js"]
+        "css": ["ui-messaging.css", "annotation.css"]
     }
   ],
 
@@ -55,7 +55,7 @@
       "128": "/images/checkstep_logo128.png"
     },
     "default_title": "Checkstep Data Collector",
-    "default_popup": "options.html"
+    "default_popup": "popup.html"
   }
 
 }

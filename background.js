@@ -131,7 +131,6 @@ function mapAnnotationToRow(categoryInfo, annotation) {
      * - Secondary Labels(+)
      * - Checkstep Comments
      * - Source URL
-     * - Page Title
      * - Date of Collection
      */
 

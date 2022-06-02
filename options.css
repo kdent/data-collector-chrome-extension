@@ -1,11 +1,12 @@
 
 #menu-container {
-    width: 300px;
+    width: 200px;
 }
 
-#menu-container:hover {
-    color: red;
+.options-item:hover {
+    background-color: #e0e0e0;
 }
 
 .options-item {
+    padding: 6px;
 }
