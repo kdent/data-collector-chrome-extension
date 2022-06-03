@@ -19,31 +19,92 @@ let options = {
         });
     },
 
+    /*
+     * Display configuration items for a single category/label.
+     */
     displayLabelConfig: function (labelName, labelConfig, parentElement) {
-        var labelDiv, srcCatSpan, dataTypeSpan, labelSpan, contentSpan, nonViolSpan;
 
-        labelDiv = document.createElement("div");
+        let labelDiv = document.createElement("div");
+        labelDiv.id = labelName;
+        labelDiv.className = "annotation-container";
 
-        srcCatSpan = document.createElement("span");
-        srcCatSpan.innerHTML = "Source Category";
-        labelDiv.appendChild(srcCatSpan);
+        let labelNameDiv = document.createElement("div");
+        labelNameDiv.id = "label-name";
+        labelNameDiv.innerHTML = labelName;
+        labelDiv.appendChild(labelNameDiv);
 
-        dataTypeSpan = document.createElement("span");
-        dataTypeSpan.innerHTML = "Data Type";
-        labelDiv.appendChild(dataTypeSpan);
+        let spreadsheetId = document.createElement("div");
+        spreadsheetId.id = "spreadsheet-id";
+        spreadsheetId.innerHTML = "<b>Spreadsheet ID</b>:&nbsp;&nbsp;" + labelConfig["spreadsheet-id"];
+        labelDiv.appendChild(spreadsheetId);
 
-        labelSpan = document.createElement("span");
-        labelSpan.innerHTML = labelName;
-        labelDiv.appendChild(labelSpan);
+        let sheetName = document.createElement("div");
+        sheetName.id = "sheet-name";
+        sheetName.innerHTML = "<b>Sheet Name</b>:&nbsp;&nbsp;" + labelConfig["sheet-name"];
+        labelDiv.appendChild(sheetName);
 
-        contentSpan = document.createElement("span");
-        contentSpan.innerHTML = "Content";
-        labelDiv.appendChild(contentSpan);
+        let columnNameContainer = document.createElement("div");
+        columnNameContainer.id = "column-name-container";
+        labelDiv.appendChild(columnNameContainer);
 
-        nonViolSpan = document.createElement("span");
-        nonViolSpan.innerHTML = "Non-violating but review required";
-        labelDiv.appendChild(nonViolSpan);
+        let srcCatCol = document.createElement("div");
+        srcCatCol.className = "column-name";
+        srcCatCol.innerHTML = "Source Category";
+        columnNameContainer.appendChild(srcCatCol);
 
+        let dataTypeCol = document.createElement("div");
+        dataTypeCol.className = "column-name";
+        dataTypeCol.innerHTML = "Data Type";
+        columnNameContainer.appendChild(dataTypeCol);
+
+        let contentCol = document.createElement("div");
+        contentCol.className = "column-name";
+        contentCol.innerHTML = "Content";
+        columnNameContainer.appendChild(contentCol);
+
+        let nonViolCol = document.createElement("div");
+        nonViolCol.className = "column-name";
+        nonViolCol.innerHTML = "Non-violating but review required";
+        columnNameContainer.appendChild(nonViolCol);
+
+        let labelCol = document.createElement("div");
+        labelCol.className = "column-name";
+        labelCol.innerHTML = labelName;
+        columnNameContainer.appendChild(labelCol);
+
+        labelConfig['sub-categories'].forEach((subCat) => {
+            let subCatCol = document.createElement("div");
+            subCatCol.className = "column-name";
+            subCatCol.innerHTML = subCat;
+            columnNameContainer.appendChild(subCatCol);
+        });
+
+        labelConfig['secondary-labels'].forEach((secondaryLabel) => {
+            let secondaryLabelCol = document.createElement("div");
+            secondaryLabelCol.className = "column-name";
+            secondaryLabelCol.innerHTML = secondaryLabel;
+            columnNameContainer.appendChild(secondaryLabelCol);
+        });
+
+        let checkstepCommentsCol = document.createElement("div");
+        checkstepCommentsCol.className = "column-name";
+        checkstepCommentsCol.innerHTML = "Comment - Checkstep";
+        columnNameContainer.appendChild(checkstepCommentsCol);
+
+        let customerCommentsCol = document.createElement("div");
+        customerCommentsCol.className = "column-name";
+        customerCommentsCol.innerHTML = "Comment - Customer";
+        columnNameContainer.appendChild(customerCommentsCol);
+
+        let sourceUrlCol = document.createElement("div");
+        sourceUrlCol.className = "column-name";
+        sourceUrlCol.innerHTML = "Source URL";
+        columnNameContainer.appendChild(sourceUrlCol);
+
+        let dateCollectedCol = document.createElement("div");
+        dateCollectedCol.className = "column-name";
+        dateCollectedCol.innerHTML = "Date Collected";
+        columnNameContainer.appendChild(dateCollectedCol);
 
         parentElement.appendChild(labelDiv);
     }

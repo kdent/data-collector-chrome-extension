@@ -1,12 +1,42 @@
+p {
+    font-size: 12pt;
+}
 
-#menu-container {
+.annotation-container {
+    border-top: 1px solid black;
+    margin: 13px 13px 25px 13px;
+    padding: 5px;
+}
+
+#label-name {
+    font-size: 120%;
+    padding-bottom: 5px;
+}
+
+#spreadsheet-id {
+    display: inline-block;
+    width: 500px;
+    float: left;
+    padding: 0;
+}
+
+#sheet-name {
+    display: inline-block;
     width: 200px;
 }
 
-.options-item:hover {
-    background-color: #e0e0e0;
+#column-name-container {
+    margin-top: 18px;
+    white-space: nowrap;
+    overflow: auto;
 }
 
-.options-item {
-    padding: 6px;
+.column-name {
+    display: inline-block;
+    white-space: normal;
+    vertical-align: top;
+    background-color: #efefef;
+    margin-right: 4px;
+    padding: 4px;
+    width: 125px;
 }
