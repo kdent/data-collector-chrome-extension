@@ -13,6 +13,7 @@ chrome.identity.getAuthToken({ 'interactive': true }, function (token) {
     googleSheet.token = token;
 });
 
+
 /*
  * Add listeners.
  */

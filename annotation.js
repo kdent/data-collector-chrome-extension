@@ -25,6 +25,10 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 
     if (request.messageType === "show-annotation-screen") {
         console.log("show annotation screen request received");
+        // TODO: add code here to handle getting Twitter posts that include emojis.
+        document.getSelection().getRangeAt(0).cloneContents().childNodes.forEach((node, nbr) => {
+            console.log("node: " + node);
+        });
         displayAnnotateScreen(request.selectedText, sendResponse);
         sendResponse(true);
     } else {
